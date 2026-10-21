@@ -1,0 +1,56 @@
+@startuml
+skinparam sequenceMessageAlign center
+skinparam shadowing false
+skinparam ParticipantPadding 40
+
+participant cliente #D8B4F8
+participant administrador #A3E65A
+participant confeccionista #8FD3F0
+
+cliente -> administrador : solicitar cotizacion
+administrador -> administrador : revizar solicitud
+administrador -> administrador : elabora cotizacion
+administrador -> cliente : enviar cotizacion
+cliente -> cliente : resibir cotizacion
+
+alt ¿acepta? [no]
+    cliente -> cliente : indicar no conformidad
+    note over cliente : fin
+else si
+    administrador -> cliente : solicitar adelanto
+    cliente -> administrador : pagar adelanto
+    administrador -> administrador : registrar pedido
+
+    loop repetir hasta que haya stock
+        administrador -> administrador : verificar stock
+        alt ¿hay stock? [no]
+            administrador -> administrador : emitir orden de compra
+            administrador -> administrador : registrar ingreso
+        else si
+            administrador -> administrador : estimar tiempo de preparacion
+        end
+    end
+
+    administrador -> cliente : indicar tiempo
+
+    alt ¿acepta tiempo? [no]
+        cliente -> cliente : cancela pedido
+        note over cliente : fin
+    else si
+        administrador -> administrador : elaborar ficha de produccion
+        administrador -> confeccionista
+        confeccionista -> confeccionista : recibir ficha
+        confeccionista -> confeccionista : empesar produccion
+        confeccionista -> confeccionista : gestionar seguimiento
+        confeccionista -> confeccionista : marcar pedido terminado
+        confeccionista -> administrador
+        administrador -> administrador : registrar descuento de materiales
+        administrador -> cliente : notificar pedido terminado
+        administrador -> cliente : solicitar saldo pendiente
+        cliente -> administrador : pagar saldo
+        administrador -> cliente : entregar pedido
+        cliente -> cliente : recibir pedido
+        note over cliente : fin
+    end
+end
+@enduml
