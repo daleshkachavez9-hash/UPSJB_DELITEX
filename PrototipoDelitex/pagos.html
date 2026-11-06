@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagos | DELITEX Confecciones</title>
+  <link rel="icon" href="./images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./css/custom.css">
+</head>
+<body data-page="pagos">
+
+  <aside class="app-sidebar" id="sidebar" aria-label="Menú principal">
+    <a href="dashboard.html" class="sidebar-brand">
+      <span class="brand-logo">DX</span>
+      <span class="brand-name">DELITEX</span>
+      <span class="brand-sub">Confecciones deportivas</span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <p class="nav-section">Principal</p>
+      <a href="dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+      <a href="reportes.html" class="sidebar-link"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+
+      <p class="nav-section">Gestión</p>
+      <a href="clientes.html" class="sidebar-link"><i class="bi bi-people"></i> Clientes</a>
+      <a href="pedidos.html" class="sidebar-link"><i class="bi bi-clipboard-check"></i> Pedidos</a>
+      <a href="seguimiento.html" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
+      <a href="produccion.html" class="sidebar-link"><i class="bi bi-scissors"></i> Producción</a>
+      <a href="insumos.html" class="sidebar-link"><i class="bi bi-boxes"></i> Insumos</a>
+      <a href="almacen.html" class="sidebar-link"><i class="bi bi-box-seam"></i> Almacén</a>
+      <a href="alertas.html" class="sidebar-link"><i class="bi bi-exclamation-triangle"></i> Alertas de stock</a>
+      <a href="pagos.html" class="sidebar-link active" aria-current="page"><i class="bi bi-cash-coin"></i> Pagos</a>
+      <a href="entregas.html" class="sidebar-link"><i class="bi bi-truck"></i> Entregas</a>
+
+      <p class="nav-section">Configuraciones</p>
+      <a href="usuarios.html" class="sidebar-link"><i class="bi bi-person-gear"></i> Usuarios</a>
+      <a href="configuracion.html" class="sidebar-link"><i class="bi bi-gear"></i> Configuración</a>
+    </nav>
+
+    <div class="sidebar-user dropup">
+      <button class="user-card dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="avatar soft-rosa" id="userAvatar">MQ</span>
+        <span class="user-info">
+          <span class="user-name d-block text-truncate" id="userName">María Quispe</span>
+          <span class="user-email d-block text-truncate" id="userEmail">maria.quispe@delitex.pe</span>
+        </span>
+        <i class="bi bi-chevron-expand"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="configuracion.html#cuenta"><i class="bi bi-person"></i> Mi perfil</a></li>
+        <li><a class="dropdown-item" href="configuracion.html#clave"><i class="bi bi-key"></i> Cambiar contraseña</a></li>
+        <li><a class="dropdown-item" href="configuracion.html#general"><i class="bi bi-sliders"></i> Preferencias</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="index.html" data-cerrar-sesion><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="btn-icon" id="btnMenu" type="button" aria-label="Mostrar u ocultar menú" aria-controls="sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      <h1 class="topbar-title">Pagos</h1>
+
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span class="topbar-date d-none d-md-inline"><i class="bi bi-calendar3 me-1"></i><span id="fechaHoy"></span></span>
+
+        <div class="dropdown">
+          <button class="btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notificaciones">
+            <i class="bi bi-bell"></i>
+            <span class="badge rounded-pill bg-danger" id="notifBadge">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-menu">
+            <h6 class="dropdown-header">Notificaciones</h6>
+            <div id="notifLista"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-content">
+      <div class="page-header">
+        <div>
+          <h2>Pagos</h2>
+          <p>Registra adelantos, abonos y cancelaciones, y emite el recibo de cada pago.</p>
+        </div>
+        <nav class="breadcrumb-pill" aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="dashboard.html"><i class="bi bi-house-door"></i> Inicio</a></li>
+            <li class="breadcrumb-item">Gestión</li>
+            <li class="breadcrumb-item active" aria-current="page">Pagos</li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="row g-4 mb-4" id="pagosResumen"></div>
+
+      <div class="card mb-4">
+        <div class="module-head">
+          <span class="module-icon soft-salvia"><i class="bi bi-wallet2"></i></span>
+          <div>
+            <h3>Pedidos con saldo pendiente</h3>
+            <p id="pgTotalSaldo">0 pedidos</p>
+          </div>
+          <div class="input-group input-group-sm w-auto ms-auto">
+            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+            <input type="search" class="form-control" id="pgBuscar" placeholder="DNI, código o cliente">
+          </div>
+          <button type="button" class="btn btn-primary" data-nuevo-pago><i class="bi bi-cash-coin me-1"></i> Registrar pago</button>
+        </div>
+        <div class="card-body px-0 pb-0">
+          <p class="small text-muted px-3 mb-2"><i class="bi bi-hand-index me-1"></i>Haz clic en un pedido para seleccionarlo.</p>
+          <div class="table-responsive table-scroll">
+            <table class="table table-hover table-delitex">
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                  <th>DNI</th>
+                  <th>Cliente</th>
+                  <th>Estado</th>
+                  <th class="text-end">Total</th>
+                  <th class="text-end">Pagado</th>
+                  <th class="text-end">Saldo</th>
+                  <th class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tablaSaldos"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="module-actions">
+          <button type="button" class="btn btn-primary" data-nuevo-pago><i class="bi bi-plus-lg me-1"></i> Registrar pago</button>
+          <a href="entregas.html" class="btn btn-salvia"><i class="bi bi-truck me-1"></i> Ir a entregas</a>
+          <a href="reportes.html" class="btn btn-lavanda"><i class="bi bi-file-earmark-bar-graph me-1"></i> Ver reportes</a>
+          <a href="dashboard.html" class="btn btn-outline-dark ms-sm-auto"><i class="bi bi-arrow-left me-1"></i> Volver</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>Historial de pagos</h3>
+            <small id="pgTotalHistorial">Pagos recibidos de todos los pedidos</small>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <div class="input-group input-group-sm w-auto">
+              <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+              <input type="search" class="form-control" id="pgBuscarHistorial" placeholder="Recibo, pedido o cliente">
+            </div>
+            <select class="form-select form-select-sm w-auto" id="pgFiltroMetodo" aria-label="Filtrar por método">
+              <option value="">Todos los métodos</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body px-0 pb-0">
+          <div class="table-responsive table-scroll">
+            <table class="table table-hover table-delitex">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Recibo</th>
+                  <th>Pedido</th>
+                  <th>Cliente</th>
+                  <th>Concepto</th>
+                  <th>Método</th>
+                  <th class="text-end">Monto</th>
+                  <th class="text-end">Recibo</th>
+                </tr>
+              </thead>
+              <tbody id="tablaHistorialPagos"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer d-flex flex-wrap justify-content-between gap-2">
+      <span>© 2026 DELITEX Confecciones · Sistema de gestión</span>
+      <span>Usuario: <strong id="footerRol">Administrador</strong></span>
+    </footer>
+  </div>
+
+  <div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <form class="modal-content form-grid" id="formPago" novalidate>
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <span class="icon-chip soft-salvia"><i class="bi bi-cash-coin"></i></span>
+            <div>
+              <h5 class="modal-title mb-0" id="modalPagoLabel">Registrar pago</h5>
+              <small class="text-muted">Busca el pedido por DNI del cliente o por código</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label for="mpBuscar" class="form-label">Buscar</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                <input type="search" class="form-control" id="mpBuscar" placeholder="DNI, PED-0246 o nombre">
+              </div>
+            </div>
+            <div class="col-md-7">
+              <label for="mpPedido" class="form-label">Pedido con saldo</label>
+              <select class="form-select" id="mpPedido" required></select>
+              <div class="invalid-feedback">Selecciona el pedido.</div>
+            </div>
+            <div class="col-12" id="mpDetalle"></div>
+            <div class="col-md-4">
+              <label for="mpMonto" class="form-label">Monto (S/)</label>
+              <input type="number" class="form-control" id="mpMonto" min="0.01" step="0.01" required>
+              <div class="invalid-feedback" id="mpMontoError">Ingresa un monto válido.</div>
+            </div>
+            <div class="col-md-4">
+              <label for="mpMetodo" class="form-label">Método de pago</label>
+              <select class="form-select" id="mpMetodo"></select>
+            </div>
+            <div class="col-md-4">
+              <label for="mpTipo" class="form-label">Concepto</label>
+              <input type="text" class="form-control fw-bold" id="mpTipo" value="—" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i> Registrar pago</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalRecibo" tabindex="-1" aria-labelledby="modalReciboLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <span class="icon-chip soft-salvia"><i class="bi bi-receipt"></i></span>
+            <h5 class="modal-title mb-0" id="modalReciboLabel">Recibo de pago</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="reciboContenido"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="btnImprimirRecibo"><i class="bi bi-printer me-1"></i> Imprimir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/datos.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

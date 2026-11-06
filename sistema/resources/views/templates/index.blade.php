@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión | DELITEX Confecciones</title>
+  <link rel="icon" href="./images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./css/custom.css">
+</head>
+<body data-page="index">
+
+  <main class="auth-page">
+    <div class="card auth-card">
+      <div class="row g-0">
+        <div class="col-lg-5">
+          <div class="auth-side">
+            <span class="brand-logo">DX</span>
+            <p class="auth-brand">DELITEX</p>
+            <p class="auth-tag">Sistema de gestión de pedidos, producción, almacén y pagos para la confección de ropa deportiva personalizada.</p>
+            <img src="./images/ilustracion-acceso.svg" alt="Conjunto deportivo personalizado">
+          </div>
+        </div>
+        <div class="col-lg-7 bg-white">
+          <div class="auth-form">
+            <div class="text-center">
+              <span class="auth-icon soft-salvia mx-auto"><i class="bi bi-person-circle"></i></span>
+              <h1>Inicio de sesión</h1>
+              <p class="auth-sub">Ingresa tus credenciales para continuar</p>
+            </div>
+
+            <div class="alert alert-danger small d-none" id="loginError" role="alert"></div>
+
+            <form id="formLogin" novalidate>
+              <div class="mb-3">
+                <label for="lUsuario" class="form-label">Usuario o correo</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="lUsuario" placeholder="Ingresa tu usuario" autocomplete="username" required>
+                  <span class="input-group-text"><i class="bi bi-person"></i></span>
+                </div>
+              </div>
+              <div class="mb-2">
+                <label for="lClave" class="form-label">Contraseña</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="lClave" placeholder="Ingresa tu contraseña" autocomplete="current-password" required>
+                  <button class="input-group-text" type="button" data-ver-clave="lClave" aria-label="Mostrar contraseña"><i class="bi bi-eye-slash"></i></button>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="lRecordar">
+                  <label class="form-check-label small" for="lRecordar">Recordar usuario</label>
+                </div>
+                <a href="recuperar.html" class="small fw-semibold">¿Olvidaste tu contraseña?</a>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión</button>
+            </form>
+
+            <p class="text-center small mt-4 mb-2">¿No tienes una cuenta? <a href="registro.html" class="fw-semibold">Regístrate aquí</a></p>
+            <p class="text-center small text-muted mb-0"><i class="bi bi-info-circle me-1"></i>Usuario de prueba: <strong>mquispe</strong> · Contraseña: <strong>delitex123</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/datos.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
+
