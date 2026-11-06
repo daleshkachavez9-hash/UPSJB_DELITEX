@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "delitex",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765"],
+      "port": 8765
+    },
+    {
+      "name": "delitex-2",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8767"],
+      "port": 8767
+    },
+    {
+      "name": "delitex-3",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8771"],
+      "port": 8771
+    }
+  ]
+}

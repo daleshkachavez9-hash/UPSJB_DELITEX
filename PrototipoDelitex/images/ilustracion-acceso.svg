@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 260">
+  <ellipse cx="140" cy="236" rx="104" ry="12" fill="#2B3A52" opacity=".10"/>
+  <circle cx="140" cy="120" r="104" fill="#FFFFFF" opacity=".45"/>
+  <g stroke="#526681" stroke-width="3" stroke-linejoin="round">
+    <path d="M100 40 L122 30 Q140 48 158 30 L180 40 L228 66 L212 108 L186 98 L186 196 Q140 208 94 196 L94 98 L68 108 L52 66 Z" fill="#FFFFFF"/>
+    <path d="M52 66 L68 108 L94 98 L94 78" fill="#9BBDE0"/>
+    <path d="M228 66 L212 108 L186 98 L186 78" fill="#9BBDE0"/>
+    <path d="M122 30 Q140 48 158 30" fill="none"/>
+  </g>
+  <path d="M96 150 L184 150 L184 164 L96 164 Z" fill="#E8E0F4"/>
+  <text x="140" y="132" text-anchor="middle" font-family="Nunito, Arial, sans-serif" font-size="46" font-weight="800" fill="#526681">10</text>
+  <text x="140" y="186" text-anchor="middle" font-family="Nunito, Arial, sans-serif" font-size="13" font-weight="800" letter-spacing="3" fill="#526681">DELITEX</text>
+  <g transform="translate(206 150) rotate(-20)">
+    <circle cx="0" cy="0" r="9" fill="none" stroke="#2B3A52" stroke-width="3"/>
+    <circle cx="0" cy="26" r="9" fill="none" stroke="#2B3A52" stroke-width="3"/>
+    <path d="M6 6 L34 -26 M6 20 L34 52" stroke="#2B3A52" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(46 168)">
+    <rect x="0" y="0" width="34" height="34" rx="17" fill="#F7E9BD" stroke="#526681" stroke-width="3"/>
+    <circle cx="17" cy="17" r="5" fill="#526681"/>
+    <path d="M17 34 Q20 52 44 56" fill="none" stroke="#526681" stroke-width="3" stroke-dasharray="4 4"/>
+  </g>
+</svg>

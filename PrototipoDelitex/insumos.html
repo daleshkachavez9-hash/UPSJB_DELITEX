@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insumos | DELITEX Confecciones</title>
+  <link rel="icon" href="./images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./css/custom.css">
+</head>
+<body data-page="insumos">
+
+  <aside class="app-sidebar" id="sidebar" aria-label="Menú principal">
+    <a href="dashboard.html" class="sidebar-brand">
+      <span class="brand-logo">DX</span>
+      <span class="brand-name">DELITEX</span>
+      <span class="brand-sub">Confecciones deportivas</span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <p class="nav-section">Principal</p>
+      <a href="dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+      <a href="reportes.html" class="sidebar-link"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+
+      <p class="nav-section">Gestión</p>
+      <a href="clientes.html" class="sidebar-link"><i class="bi bi-people"></i> Clientes</a>
+      <a href="pedidos.html" class="sidebar-link"><i class="bi bi-clipboard-check"></i> Pedidos</a>
+      <a href="seguimiento.html" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
+      <a href="produccion.html" class="sidebar-link"><i class="bi bi-scissors"></i> Producción</a>
+      <a href="insumos.html" class="sidebar-link active" aria-current="page"><i class="bi bi-boxes"></i> Insumos</a>
+      <a href="almacen.html" class="sidebar-link"><i class="bi bi-box-seam"></i> Almacén</a>
+      <a href="alertas.html" class="sidebar-link"><i class="bi bi-exclamation-triangle"></i> Alertas de stock</a>
+      <a href="pagos.html" class="sidebar-link"><i class="bi bi-cash-coin"></i> Pagos</a>
+      <a href="entregas.html" class="sidebar-link"><i class="bi bi-truck"></i> Entregas</a>
+
+      <p class="nav-section">Configuraciones</p>
+      <a href="usuarios.html" class="sidebar-link"><i class="bi bi-person-gear"></i> Usuarios</a>
+      <a href="configuracion.html" class="sidebar-link"><i class="bi bi-gear"></i> Configuración</a>
+    </nav>
+
+    <div class="sidebar-user dropup">
+      <button class="user-card dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="avatar soft-rosa" id="userAvatar">MQ</span>
+        <span class="user-info">
+          <span class="user-name d-block text-truncate" id="userName">María Quispe</span>
+          <span class="user-email d-block text-truncate" id="userEmail">maria.quispe@delitex.pe</span>
+        </span>
+        <i class="bi bi-chevron-expand"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="configuracion.html#cuenta"><i class="bi bi-person"></i> Mi perfil</a></li>
+        <li><a class="dropdown-item" href="configuracion.html#clave"><i class="bi bi-key"></i> Cambiar contraseña</a></li>
+        <li><a class="dropdown-item" href="configuracion.html#general"><i class="bi bi-sliders"></i> Preferencias</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="index.html" data-cerrar-sesion><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="btn-icon" id="btnMenu" type="button" aria-label="Mostrar u ocultar menú" aria-controls="sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      <h1 class="topbar-title">Insumos</h1>
+
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span class="topbar-date d-none d-md-inline"><i class="bi bi-calendar3 me-1"></i><span id="fechaHoy"></span></span>
+
+        <div class="dropdown">
+          <button class="btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notificaciones">
+            <i class="bi bi-bell"></i>
+            <span class="badge rounded-pill bg-danger" id="notifBadge">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-menu">
+            <h6 class="dropdown-header">Notificaciones</h6>
+            <div id="notifLista"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-content">
+      <div class="page-header">
+        <div>
+          <h2>Insumos</h2>
+          <p>Registra telas, hilos, accesorios y materiales de estampado con su stock mínimo.</p>
+        </div>
+        <nav class="breadcrumb-pill" aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="dashboard.html"><i class="bi bi-house-door"></i> Inicio</a></li>
+            <li class="breadcrumb-item">Gestión</li>
+            <li class="breadcrumb-item active" aria-current="page">Insumos</li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="card">
+        <div class="module-head">
+          <span class="module-icon soft-lavanda"><i class="bi bi-boxes"></i></span>
+          <div>
+            <h3>Inventario de insumos</h3>
+            <p id="iTotal">0 insumos</p>
+          </div>
+          <button type="button" class="btn btn-primary ms-auto" data-nuevo-insumo><i class="bi bi-plus-lg me-1"></i> Nuevo insumo</button>
+        </div>
+        <div class="card-body px-4 pt-2 pb-3">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                <input type="search" class="form-control" id="buscarInsumo" placeholder="Buscar por código, nombre o color">
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <select class="form-select" id="filtroCategoria" aria-label="Filtrar por categoría">
+                <option value="">Todas las categorías</option>
+              </select>
+            </div>
+            <div class="col-6 col-md-3">
+              <select class="form-select" id="filtroEstadoInsumo" aria-label="Filtrar por estado">
+                <option value="">Todos los estados</option>
+                <option>Normal</option>
+                <option>Bajo</option>
+                <option>Crítico</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p class="small text-muted px-3 mb-2"><i class="bi bi-hand-index me-1"></i>Haz clic en un insumo para seleccionarlo.</p>
+        <div class="table-responsive table-scroll">
+          <table class="table table-hover table-delitex">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Insumo</th>
+                <th>Categoría</th>
+                <th class="text-center">Stock</th>
+                <th class="text-center">Mínimo</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaInsumos"></tbody>
+          </table>
+        </div>
+        <div class="module-actions">
+          <button type="button" class="btn btn-primary" data-nuevo-insumo><i class="bi bi-plus-lg me-1"></i> Nuevo</button>
+          <button type="button" class="btn btn-amarillo" id="btnModificarInsumo"><i class="bi bi-pencil-square me-1"></i> Modificar</button>
+          <button type="button" class="btn btn-danger" id="btnEliminarInsumo"><i class="bi bi-trash me-1"></i> Eliminar</button>
+          <button type="button" class="btn btn-salvia" id="btnIngresoInsumo"><i class="bi bi-box-arrow-in-down me-1"></i> Ingreso de stock</button>
+          <a href="dashboard.html" class="btn btn-outline-dark ms-sm-auto"><i class="bi bi-arrow-left me-1"></i> Volver</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer d-flex flex-wrap justify-content-between gap-2">
+      <span>© 2026 DELITEX Confecciones · Sistema de gestión</span>
+      <span>Usuario: <strong id="footerRol">Administrador</strong></span>
+    </footer>
+  </div>
+
+  <div class="modal fade" id="modalInsumo" tabindex="-1" aria-labelledby="modalInsumoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form class="modal-content form-grid" id="formInsumo" novalidate>
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <span class="icon-chip soft-lavanda"><i class="bi bi-boxes"></i></span>
+            <div>
+              <h5 class="modal-title mb-0" id="modalInsumoLabel">Nuevo insumo</h5>
+              <small class="text-muted" id="iModo">Completa la información del insumo</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-7">
+              <label for="iNombre" class="form-label">Nombre del insumo</label>
+              <input type="text" class="form-control" id="iNombre" placeholder="Ej. Tela dry-fit" required>
+              <div class="invalid-feedback">Ingresa el nombre.</div>
+            </div>
+            <div class="col-md-5">
+              <label for="iColor" class="form-label">Color</label>
+              <input type="text" class="form-control" id="iColor" placeholder="Ej. Azul marino">
+            </div>
+            <div class="col-md-6">
+              <label for="iCategoria" class="form-label">Categoría</label>
+              <select class="form-select" id="iCategoria" required></select>
+            </div>
+            <div class="col-md-6">
+              <label for="iUnidad" class="form-label">Unidad</label>
+              <select class="form-select" id="iUnidad" required>
+                <option>m</option>
+                <option>conos</option>
+                <option>rollos</option>
+                <option>litros</option>
+                <option>unid.</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="iStock" class="form-label">Stock inicial</label>
+              <input type="number" class="form-control" id="iStock" min="0" step="0.1" value="0" required>
+              <div class="invalid-feedback">Ingresa un valor válido.</div>
+              <div class="form-text d-none" id="iStockAyuda">El stock se actualiza desde <a href="almacen.html">Almacén</a>.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="iMinimo" class="form-label">Stock mínimo</label>
+              <input type="number" class="form-control" id="iMinimo" min="0" step="0.1" required>
+              <div class="invalid-feedback">Ingresa el stock mínimo.</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/datos.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuración | DELITEX Confecciones</title>
+  <link rel="icon" href="./images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./css/custom.css">
+</head>
+<body data-page="configuracion">
+
+  <aside class="app-sidebar" id="sidebar" aria-label="Menú principal">
+    <a href="dashboard.html" class="sidebar-brand">
+      <span class="brand-logo">DX</span>
+      <span class="brand-name">DELITEX</span>
+      <span class="brand-sub">Confecciones deportivas</span>
+    </a>
+
+    <nav class="sidebar-nav">
+      <p class="nav-section">Principal</p>
+      <a href="dashboard.html" class="sidebar-link"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+      <a href="reportes.html" class="sidebar-link"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+
+      <p class="nav-section">Gestión</p>
+      <a href="clientes.html" class="sidebar-link"><i class="bi bi-people"></i> Clientes</a>
+      <a href="pedidos.html" class="sidebar-link"><i class="bi bi-clipboard-check"></i> Pedidos</a>
+      <a href="seguimiento.html" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
+      <a href="produccion.html" class="sidebar-link"><i class="bi bi-scissors"></i> Producción</a>
+      <a href="insumos.html" class="sidebar-link"><i class="bi bi-boxes"></i> Insumos</a>
+      <a href="almacen.html" class="sidebar-link"><i class="bi bi-box-seam"></i> Almacén</a>
+      <a href="alertas.html" class="sidebar-link"><i class="bi bi-exclamation-triangle"></i> Alertas de stock</a>
+      <a href="pagos.html" class="sidebar-link"><i class="bi bi-cash-coin"></i> Pagos</a>
+      <a href="entregas.html" class="sidebar-link"><i class="bi bi-truck"></i> Entregas</a>
+
+      <p class="nav-section">Configuraciones</p>
+      <a href="usuarios.html" class="sidebar-link"><i class="bi bi-person-gear"></i> Usuarios</a>
+      <a href="configuracion.html" class="sidebar-link active" aria-current="page"><i class="bi bi-gear"></i> Configuración</a>
+    </nav>
+
+    <div class="sidebar-user dropup">
+      <button class="user-card dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="avatar soft-rosa" id="userAvatar">MQ</span>
+        <span class="user-info">
+          <span class="user-name d-block text-truncate" id="userName">María Quispe</span>
+          <span class="user-email d-block text-truncate" id="userEmail">maria.quispe@delitex.pe</span>
+        </span>
+        <i class="bi bi-chevron-expand"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="configuracion.html#cuenta"><i class="bi bi-person"></i> Mi perfil</a></li>
+        <li><a class="dropdown-item" href="configuracion.html#clave"><i class="bi bi-key"></i> Cambiar contraseña</a></li>
+        <li><a class="dropdown-item" href="configuracion.html#general"><i class="bi bi-sliders"></i> Preferencias</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="index.html" data-cerrar-sesion><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <button class="btn-icon" id="btnMenu" type="button" aria-label="Mostrar u ocultar menú" aria-controls="sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      <h1 class="topbar-title">Configuración</h1>
+
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span class="topbar-date d-none d-md-inline"><i class="bi bi-calendar3 me-1"></i><span id="fechaHoy"></span></span>
+
+        <div class="dropdown">
+          <button class="btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notificaciones">
+            <i class="bi bi-bell"></i>
+            <span class="badge rounded-pill bg-danger" id="notifBadge">0</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-menu">
+            <h6 class="dropdown-header">Notificaciones</h6>
+            <div id="notifLista"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-content">
+      <div class="page-header">
+        <div>
+          <h2>Configuración del sistema</h2>
+          <p>Ajustes generales, precios y parámetros de inventario.</p>
+        </div>
+        <nav class="breadcrumb-pill" aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="dashboard.html"><i class="bi bi-house-door"></i> Inicio</a></li>
+            <li class="breadcrumb-item">Configuraciones</li>
+            <li class="breadcrumb-item active" aria-current="page">Configuración</li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="card">
+        <div class="module-head">
+          <span class="module-icon soft-lavanda"><i class="bi bi-gear"></i></span>
+          <div>
+            <h3>Configuración del sistema</h3>
+            <p>Ajustes generales del sistema</p>
+          </div>
+        </div>
+
+        <div class="px-4">
+          <ul class="nav nav-tabs nav-tabs-delitex" role="tablist">
+            <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabGeneral" type="button" role="tab">General</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPedidos" type="button" role="tab">Pedidos y precios</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabInventario" type="button" role="tab">Inventario</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCuenta" type="button" role="tab">Mi cuenta</button></li>
+            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDatos" type="button" role="tab">Datos</button></li>
+          </ul>
+        </div>
+
+        <form id="formConfig" class="form-grid" novalidate>
+          <div class="tab-content card-body px-4 py-4">
+            <div class="tab-pane fade show active" id="tabGeneral" role="tabpanel">
+              <div class="row g-4">
+                <div class="col-lg-8">
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <label for="cfNombre" class="form-label">Nombre de la empresa</label>
+                      <input type="text" class="form-control" id="cfNombre" required>
+                    </div>
+                    <div class="col-md-5">
+                      <label for="cfRuc" class="form-label">RUC</label>
+                      <input type="text" class="form-control" id="cfRuc" maxlength="11" pattern="[0-9]{11}" required>
+                      <div class="invalid-feedback">El RUC tiene 11 dígitos.</div>
+                    </div>
+                    <div class="col-12">
+                      <label for="cfDireccion" class="form-label">Dirección</label>
+                      <input type="text" class="form-control" id="cfDireccion">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="cfTelefono" class="form-label">Teléfono</label>
+                      <input type="text" class="form-control" id="cfTelefono">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="cfCorreo" class="form-label">Correo electrónico</label>
+                      <input type="email" class="form-control" id="cfCorreo">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <span class="form-label d-block">Logo de la empresa</span>
+                  <div class="border rounded-4 p-4 text-center">
+                    <span class="brand-logo mx-auto mb-2">DX</span>
+                    <div class="fw-bold">DELITEX</div>
+                    <div class="small text-muted mb-3">Confecciones deportivas</div>
+                    <button type="button" class="btn btn-sm btn-outline-dark" id="btnCambiarLogo"><i class="bi bi-image me-1"></i> Cambiar logo</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tabPedidos" role="tabpanel">
+              <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                  <label for="cfAdelanto" class="form-label">Adelanto mínimo sugerido (%)</label>
+                  <input type="number" class="form-control" id="cfAdelanto" min="0" max="100" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="cfDias" class="form-label">Días de entrega por defecto</label>
+                  <input type="number" class="form-control" id="cfDias" min="1" max="60" required>
+                </div>
+              </div>
+              <p class="form-section-title">Precio base y consumo de tela por prenda</p>
+              <div class="table-responsive mb-4">
+                <table class="table table-delitex align-middle">
+                  <thead>
+                    <tr>
+                      <th>Prenda</th>
+                      <th>Tela sugerida</th>
+                      <th>Precio (S/)</th>
+                      <th>Tela por prenda (m)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cfPrendas"></tbody>
+                </table>
+              </div>
+              <p class="form-section-title">Recargo por estampado (por prenda)</p>
+              <div class="table-responsive">
+                <table class="table table-delitex align-middle">
+                  <thead>
+                    <tr>
+                      <th>Estampado</th>
+                      <th>Recargo (S/)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cfEstampados"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tabInventario" role="tabpanel">
+              <div class="row g-3">
+                <div class="col-md-5">
+                  <label for="cfCritico" class="form-label">Nivel crítico (% del stock mínimo)</label>
+                  <input type="number" class="form-control" id="cfCritico" min="1" max="99" required>
+                </div>
+                <div class="col-12">
+                  <div class="alert soft-azul small mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Un insumo pasa a <strong>Bajo</strong> cuando su stock es menor al mínimo, y a <strong>Crítico</strong> cuando llega al porcentaje indicado del mínimo. Al generar una orden de trabajo, el stock se descuenta automáticamente.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tabCuenta" role="tabpanel">
+              <div class="row g-4">
+                <div class="col-lg-6">
+                  <p class="form-section-title">Mi perfil</p>
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="avatar soft-rosa" id="cfAvatar">MQ</span>
+                    <div>
+                      <div class="fw-bold" id="cfPerfilNombre"></div>
+                      <div class="small text-muted" id="cfPerfilRol"></div>
+                    </div>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="cfMiNombre" class="form-label">Nombre completo</label>
+                      <input type="text" class="form-control" id="cfMiNombre">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="cfMiUsuario" class="form-label">Usuario</label>
+                      <input type="text" class="form-control" id="cfMiUsuario" readonly>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="cfMiCorreo" class="form-label">Correo</label>
+                      <input type="email" class="form-control" id="cfMiCorreo">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6" id="seccionClave">
+                  <p class="form-section-title">Cambiar contraseña</p>
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="cfClaveActual" class="form-label">Contraseña actual</label>
+                      <input type="password" class="form-control" id="cfClaveActual" autocomplete="current-password">
+                      <div class="invalid-feedback">La contraseña actual no es correcta.</div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="cfClaveNueva" class="form-label">Nueva contraseña</label>
+                      <input type="password" class="form-control" id="cfClaveNueva" autocomplete="new-password">
+                      <div class="invalid-feedback">Mínimo 6 caracteres.</div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="cfClaveConfirmar" class="form-label">Confirmar contraseña</label>
+                      <input type="password" class="form-control" id="cfClaveConfirmar" autocomplete="new-password">
+                      <div class="invalid-feedback">Las contraseñas no coinciden.</div>
+                    </div>
+                    <div class="col-12">
+                      <button type="button" class="btn btn-lavanda" id="btnCambiarClave"><i class="bi bi-key me-1"></i> Actualizar contraseña</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="tabDatos" role="tabpanel">
+              <div class="alert soft-amarillo d-flex flex-wrap align-items-center gap-3 mb-0">
+                <i class="bi bi-database-gear fs-3"></i>
+                <div class="flex-grow-1">
+                  <strong class="d-block">Datos de demostración</strong>
+                  <span class="small">Los datos del prototipo se guardan en este navegador. Puedes volver a los datos iniciales en cualquier momento.</span>
+                </div>
+                <button type="button" class="btn btn-danger" id="btnRestablecer"><i class="bi bi-arrow-counterclockwise me-1"></i> Restablecer datos</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="module-actions">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Guardar cambios</button>
+            <a href="dashboard.html" class="btn btn-outline-dark ms-sm-auto"><i class="bi bi-arrow-left me-1"></i> Volver</a>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="app-footer d-flex flex-wrap justify-content-between gap-2">
+      <span>© 2026 DELITEX Confecciones · Sistema de gestión</span>
+      <span>Usuario: <strong id="footerRol">Administrador</strong></span>
+    </footer>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/datos.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
