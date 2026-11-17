@@ -1,11 +1,8 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('templates.index');
-});
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
-Route::get('/administrador', function () {
-    return view('templates.administrador');
-});
+Route::view('/login', 'auth.login')->name('login');
