@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->restrictOnDelete();
-$table->date('order_date');
-$table->string('status')->default('pendiente');
-$table->decimal('total', 10, 2)->default(0);
-$table->text('description')->nullable();
+            $table->date('order_date');
+            $table->string('status')->default('pendiente');
+            $table->decimal('total', 10, 2)->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

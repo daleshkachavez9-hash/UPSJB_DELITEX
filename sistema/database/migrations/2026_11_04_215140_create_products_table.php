@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-$table->string('garment_type');
-$table->decimal('price', 10, 2);
-$table->decimal('quantity', 10, 2)->default(0);
-$table->string('category');
-$table->string('unit')->default('unidad');
-$table->string('status')->default('activo');
+            $table->string('garment_type');
+            $table->decimal('price', 10, 2);
+            $table->decimal('quantity', 10, 2)->default(0);
+            $table->string('category');
+            $table->string('unit')->default('unidad');
+            $table->string('status')->default('activo');
             $table->timestamps();
         });
     }

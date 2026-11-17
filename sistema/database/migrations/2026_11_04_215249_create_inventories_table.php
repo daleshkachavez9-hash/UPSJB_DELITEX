@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-$table->decimal('current_stock', 10, 2)->default(0);
-$table->decimal('minimum_stock', 10, 2)->default(0);
-$table->date('last_update')->nullable();
+            $table->foreignId('product_id')->constrained()->restrictOnDelete();
+            $table->decimal('current_stock', 10, 2)->default(0);
+            $table->decimal('minimum_stock', 10, 2)->default(0);
+            $table->date('last_update')->nullable();
             $table->timestamps();
         });
     }

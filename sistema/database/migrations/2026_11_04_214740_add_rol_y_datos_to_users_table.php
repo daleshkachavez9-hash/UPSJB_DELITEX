@@ -9,9 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->nullable()->after('id')
-                  ->constrained('roles')->nullOnDelete();
-            $table->string('dni', 8)->nullable()->unique()->after('name');
+            $table->foreignId('role_id')->after('id')
+                  ->constrained('roles')->restrictOnDelete();
+            $table->char('dni', 8)->unique()->after('name');
         });
     }
 
@@ -19,6 +19,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropConstrainedForeignId('role_id');
+            $table->dropUnique(['dni']);
             $table->dropColumn('dni');
         });
     }

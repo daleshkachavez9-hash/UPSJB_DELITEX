@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-$table->string('type');
-$table->date('generated_date');
-$table->text('content')->nullable();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
+            $table->string('type');
+            $table->date('generated_date');
+            $table->text('content')->nullable();
             $table->timestamps();
         });
     }

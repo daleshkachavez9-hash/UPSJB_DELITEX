@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->restrictOnDelete();
-$table->foreignId('user_id')->constrained()->restrictOnDelete();
-$table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
-$table->date('date');
-$table->decimal('total', 10, 2)->default(0);
-$table->decimal('igv', 10, 2)->default(0);
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
+            $table->foreignId('order_id')->nullable()->unique()->constrained()->nullOnDelete();
+            $table->dateTime('date');
+            $table->decimal('total', 10, 2)->default(0);
+            $table->decimal('igv', 10, 2)->default(0);
             $table->timestamps();
         });
     }
