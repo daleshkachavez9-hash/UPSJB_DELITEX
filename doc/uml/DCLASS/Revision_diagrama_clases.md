@@ -17,8 +17,9 @@ Antes de traducir el diagrama de clases a migraciones y modelos Eloquent, se rev
 | 9 | Cuatro asociaciones llamadas «realiza» y dos «genera» | Los nombres repetidos dificultan la lectura. | «solicita», «adquiere», «registra», «recibe», «origina» |
 | 10 | `IniciarSesion()` y `eleminarpago()` | Los métodos se escriben en camelCase y sin errores de escritura. | `iniciarSesion()` y `eliminarPago()` |
 | 11 | `buscar(): cliente` y `buscar(): void` | El método devuelve el registro encontrado. | `buscar(): Cliente` y `buscar(): Producto` |
-| 12 | Tipos `date` y `Void` en minúscula o mayúscula indistinta | Falta uniformidad en la notación. | `Date` y `void` |
-| 13 | Multiplicidades y nombres escritos como cuadros de texto | No formaban parte del modelo, y en el explorador del proyecto quedaban cinco asociaciones duplicadas (Venta — Venta, Pago — Entrega y repeticiones de Venta — Usuario y Pedido — Venta). | Multiplicidades y nombres registrados en cada asociación; duplicados eliminados |
+| 12 | `verificarStock(): void`, `generarAlerta(): void` y `consultarStock(): void` | Un método que verifica o consulta debe devolver el resultado. | `verificarStock(): bool`, `generarAlerta(): bool` y `consultarStock(): Decimal` |
+| 13 | Tipos `date` y `Void` en minúscula o mayúscula indistinta | Falta uniformidad en la notación. | `Date` y `void` |
+| 14 | Multiplicidades y nombres escritos como cuadros de texto | No formaban parte del modelo, y en el explorador del proyecto quedaban cinco asociaciones duplicadas (Venta — Venta, Pago — Entrega y repeticiones de Venta — Usuario y Pedido — Venta). | Multiplicidades y nombres registrados en cada asociación; duplicados eliminados |
 
 Los atributos `idCliente`, `idVenta`, `idRol`, etc. se conservan en el diagrama. En Laravel todas las tablas usan una sola columna `id`, creada con `$table->id()`, y las claves foráneas se nombran `singular_id`.
 

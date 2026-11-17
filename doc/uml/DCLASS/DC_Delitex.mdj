@@ -2305,7 +2305,7 @@
 											"top": 492,
 											"width": 143,
 											"height": 13,
-											"text": "+verificarStock(): void",
+											"text": "+verificarStock(): bool",
 											"horizontalAlignment": 0
 										}
 									],
@@ -2971,7 +2971,7 @@
 											"top": 706,
 											"width": 161.0498046875,
 											"height": 13,
-											"text": "+generarAlerta(): void",
+											"text": "+generarAlerta(): bool",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2990,7 +2990,7 @@
 											"top": 721,
 											"width": 161.0498046875,
 											"height": 13,
-											"text": "+consultarStock(): void",
+											"text": "+consultarStock(): Decimal",
 											"horizontalAlignment": 0
 										}
 									],
@@ -8829,7 +8829,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGhZIWDDIEqFHI="
 									},
-									"type": "void",
+									"type": "bool",
 									"direction": "return"
 								}
 							]
@@ -9019,7 +9019,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGhZI2fZIJDsUo="
 									},
-									"type": "void",
+									"type": "bool",
 									"direction": "return"
 								}
 							]
@@ -9038,7 +9038,7 @@
 									"_parent": {
 										"$ref": "AAAAAAGhZI3PjoJM2O4="
 									},
-									"type": "void",
+									"type": "Decimal",
 									"direction": "return"
 								}
 							]
