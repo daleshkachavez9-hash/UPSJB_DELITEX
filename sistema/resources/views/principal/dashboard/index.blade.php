@@ -12,7 +12,7 @@
   <h3>Menú principal</h3>
 </div>
 <div class="tile-grid mb-4">
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('customers.index') }}">
     <span class="tile-icon soft-lavanda"><i class="bi bi-people"></i></span>
     <span class="tile-title">Clientes</span>
     <span class="tile-sub">Registrar y buscar por DNI</span>
