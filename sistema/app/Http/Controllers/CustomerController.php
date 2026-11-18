@@ -18,13 +18,23 @@ class CustomerController extends Controller
     // Formulario vacío
     public function create()
     {
-        //
+        return view('gestion.customers.create');
     }
 
     // CREATE: validar, guardar, redirigir
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|max:150',
+            'dni' => 'required|digits:8|unique:customers',
+            'phone' => 'nullable|max:15',
+            'address' => 'nullable|max:255',
+        ], $this->mensajes());
+
+        Customer::create($validated);
+
+        return to_route('customers.index')
+            ->with('ok', 'Cliente registrado correctamente.');
     }
 
     // Formulario lleno (route model binding)
@@ -43,5 +53,18 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    private function mensajes(): array
+    {
+        return [
+            'name.required' => 'Escribe el nombre del cliente.',
+            'name.max' => 'El nombre no debe superar los 150 caracteres.',
+            'dni.required' => 'Escribe el DNI del cliente.',
+            'dni.digits' => 'El DNI debe tener 8 dígitos.',
+            'dni.unique' => 'Ese DNI ya está registrado.',
+            'phone.max' => 'El teléfono no debe superar los 15 caracteres.',
+            'address.max' => 'La dirección no debe superar los 255 caracteres.',
+        ];
     }
 }
