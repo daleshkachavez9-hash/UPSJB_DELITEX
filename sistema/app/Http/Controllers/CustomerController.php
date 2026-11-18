@@ -10,7 +10,9 @@ class CustomerController extends Controller
     // READ: listado
     public function index()
     {
-        //
+        $customers = Customer::all();
+
+        return view('gestion.customers.index', compact('customers'));
     }
 
     // Formulario vacío
