@@ -15,7 +15,11 @@
     <a href="#" class="sidebar-link"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
 
     <p class="nav-section">Gestión</p>
-    <a href="#" class="sidebar-link"><i class="bi bi-people"></i> Clientes</a>
+    <a href="{{ route('customers.index') }}"
+       class="sidebar-link {{ request()->is(['customers*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['customers*']) ? 'page' : null }}">
+      <i class="bi bi-people"></i> Clientes
+    </a>
     <a href="#" class="sidebar-link"><i class="bi bi-clipboard-check"></i> Pedidos</a>
     <a href="#" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
     <a href="#" class="sidebar-link"><i class="bi bi-scissors"></i> Producción</a>
