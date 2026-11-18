@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta | DELITEX Confecciones</title>
+  <link rel="icon" href="./images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./css/custom.css?v=3">
+  <!-- datos y control de acceso: se cargan antes del contenido para bloquear las páginas sin permiso -->
+  <script src="./js/datos.js?v=4"></script>
+  <script src="./js/auth.js?v=4"></script>
+</head>
+<body data-page="registro">
+
+  <main class="auth-page">
+    <div class="card auth-card">
+      <div class="row g-0">
+        <div class="col-lg-5">
+          <div class="auth-side">
+            <img class="auth-logo" src="./images/logo-emblema.svg" alt="Logo de DELITEX Confecciones">
+            <p class="auth-brand">DELITEX</p>
+            <p class="auth-sub-brand">Confecciones deportivas</p>
+            <p class="auth-tag">Sistema de gestión de pedidos, producción, almacén y pagos para la confección de ropa deportiva personalizada.</p>
+            <div class="auth-chips"><span><i class="bi bi-clipboard-check me-1"></i>Pedidos</span><span><i class="bi bi-scissors me-1"></i>Producción</span><span><i class="bi bi-box-seam me-1"></i>Almacén</span><span><i class="bi bi-cash-coin me-1"></i>Pagos</span></div>
+          </div>
+        </div>
+        <div class="col-lg-7 bg-white">
+          <div class="auth-form">
+            <h1>Crear nueva cuenta</h1>
+            <p class="auth-sub">Completa la información para registrarte en el sistema</p>
+            <div class="alert soft-azul small d-flex gap-2" role="note">
+              <i class="bi bi-info-circle"></i>
+              <span>Las cuentas nuevas se crean como <strong>confeccionista</strong> y quedan pendientes de activación. Los roles de dueña y administradora solo los asigna la dueña desde Usuarios.</span>
+            </div>
+
+            <div class="alert alert-danger small d-none" id="registroError" role="alert"></div>
+            <div class="alert soft-salvia small d-none" id="registroOk" role="status"></div>
+
+            <form id="formRegistro" class="row g-3" novalidate>
+              <div class="col-12">
+                <label for="rNombre" class="form-label">Nombre completo</label>
+                <input type="text" class="form-control" id="rNombre" placeholder="Ingresa tu nombre completo" required>
+                <div class="invalid-feedback">Ingresa tu nombre completo.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="rUsuario" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="rUsuario" placeholder="Ingresa un nombre de usuario" pattern="[a-zA-Z0-9._]{4,20}" required>
+                <div class="invalid-feedback">De 4 a 20 caracteres, sin espacios.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="rCorreo" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="rCorreo" placeholder="Ingresa tu correo electrónico" required>
+                <div class="invalid-feedback">Ingresa un correo válido.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="rClave" class="form-label">Contraseña</label>
+                <div class="input-group has-validation">
+                  <input type="password" class="form-control" id="rClave" placeholder="Mínimo 6 caracteres" minlength="6" autocomplete="new-password" required>
+                  <button class="input-group-text" type="button" data-ver-clave="rClave" aria-label="Mostrar contraseña"><i class="bi bi-eye-slash"></i></button>
+                  <div class="invalid-feedback">Mínimo 6 caracteres.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="rConfirmar" class="form-label">Confirmar contraseña</label>
+                <div class="input-group has-validation">
+                  <input type="password" class="form-control" id="rConfirmar" placeholder="Confirma tu contraseña" autocomplete="new-password" required>
+                  <button class="input-group-text" type="button" data-ver-clave="rConfirmar" aria-label="Mostrar contraseña"><i class="bi bi-eye-slash"></i></button>
+                  <div class="invalid-feedback">Las contraseñas no coinciden.</div>
+                </div>
+              </div>
+              <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-person-plus me-1"></i> Registrarse</button>
+              </div>
+            </form>
+
+            <p class="text-center small mt-4 mb-0">¿Ya tienes una cuenta? <a href="index.html" class="fw-semibold">Inicia sesión</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/app.js?v=4"></script>
+</body>
+</html>

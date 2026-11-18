@@ -1,0 +1,15 @@
+{
+  "name": "prototipo-delitex",
+  "version": "1.0.0",
+  "description": "Plantilla administrativa del Sistema Web para DELITEX Confecciones (Bootstrap 5.3.8 personalizado con Sass)",
+  "private": true,
+  "scripts": {
+    "build": "purgecss --css css/custom.css --content *.html js/*.js --safelist show showing hiding fade collapsing modal-backdrop modal-open was-validated --output css/reducido.css"
+  },
+  "dependencies": {
+    "bootstrap": "5.3.8"
+  },
+  "devDependencies": {
+    "purgecss": "^6.0.0"
+  }
+}
