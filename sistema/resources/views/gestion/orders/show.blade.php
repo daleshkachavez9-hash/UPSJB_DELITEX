@@ -23,6 +23,9 @@
         @if ($saldo > 0 && $order->status !== 'entregado')
           <a href="{{ route('payments.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cash-coin me-1"></i> Registrar pago</a>
         @endif
+        @if (! $order->delivery)
+          <a href="{{ route('deliveries.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-truck me-1"></i> Programar entrega</a>
+        @endif
       </div>
     </div>
 

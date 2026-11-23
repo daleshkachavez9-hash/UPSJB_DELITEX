@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -26,6 +27,9 @@ Route::resource('orders', OrderController::class);
 Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
 // Un pago es un recibo: se registra y, si hubo un error, se anula
 Route::resource('payments', PaymentController::class)->only(['index', 'create', 'store', 'destroy']);
+// La entrega se programa y luego se confirma con confirmarEntrega()
+Route::resource('deliveries', DeliveryController::class)->except('show');
+Route::patch('deliveries/{delivery}/confirm', [DeliveryController::class, 'confirm'])->name('deliveries.confirm');
 
 // Configuraciones
 Route::resource('roles', RoleController::class)->except('show');

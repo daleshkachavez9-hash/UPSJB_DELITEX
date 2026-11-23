@@ -57,7 +57,7 @@
     <span class="tile-title">Pagos</span>
     <span class="tile-sub">Adelantos, saldos y recibos</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('deliveries.index') }}">
     <span class="tile-icon soft-amarillo"><i class="bi bi-truck"></i></span>
     <span class="tile-title">Entregas</span>
     <span class="tile-sub">Salida de pedidos terminados</span>
