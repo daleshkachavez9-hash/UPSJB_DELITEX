@@ -4,6 +4,7 @@
 @section('name_section', 'CLIENTES')
 @section('description', 'Nuevo cliente')
 @section('item_section', 'Nuevo registro')
+@section('route_section', route('customers.index'))
 @section('section', 'Clientes')
 @section('module', 'Gestión')
 

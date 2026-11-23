@@ -26,7 +26,13 @@
         <nav class="breadcrumb-pill" aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}"><i class="bi bi-house-door"></i> @yield('item_section')</a></li>
-            <li class="breadcrumb-item">@yield('section')</li>
+            <li class="breadcrumb-item">
+              @hasSection('route_section')
+                <a href="@yield('route_section')">@yield('section')</a>
+              @else
+                @yield('section')
+              @endif
+            </li>
             <li class="breadcrumb-item active" aria-current="page">@yield('module')</li>
           </ol>
         </nav>
@@ -44,5 +50,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ asset('js/app.js') }}"></script>
+  {{-- Scripts propios de cada vista (por ejemplo, el detalle dinámico de la venta) --}}
+  @stack('scripts')
 </body>
 </html>
