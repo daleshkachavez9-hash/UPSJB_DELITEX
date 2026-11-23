@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleController;
@@ -14,5 +15,6 @@ Route::resource('customers', CustomerController::class)->except('show');
 // Configuraciones
 Route::resource('roles', RoleController::class)->except('show');
 Route::resource('users', UserController::class)->except('show');
+Route::resource('categories', CategoryController::class)->except('show');
 
 Route::view('/login', 'auth.login')->name('login');

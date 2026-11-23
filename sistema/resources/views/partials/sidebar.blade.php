@@ -40,7 +40,11 @@
        aria-current="{{ request()->is(['users*']) ? 'page' : null }}">
       <i class="bi bi-person-gear"></i> Usuarios
     </a>
-    <a href="#" class="sidebar-link"><i class="bi bi-gear"></i> Configuración</a>
+    <a href="{{ route('categories.index') }}"
+       class="sidebar-link {{ request()->is(['categories*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['categories*']) ? 'page' : null }}">
+      <i class="bi bi-tags"></i> Categorías
+    </a>
   </nav>
 
   <div class="sidebar-user dropup">
