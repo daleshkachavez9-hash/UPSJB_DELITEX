@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
@@ -18,6 +19,10 @@ Route::resource('products', ProductController::class)->except('show');
 Route::resource('inventories', InventoryController::class)->except('show');
 // Una venta registrada no se edita: se consulta (show) y, si hubo un error, se anula (destroy)
 Route::resource('sales', SaleController::class)->except(['edit', 'update']);
+
+// Pedidos personalizados: show sirve para el seguimiento; la etapa se cambia con actualizarEstado()
+Route::resource('orders', OrderController::class);
+Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
 
 // Configuraciones
 Route::resource('roles', RoleController::class)->except('show');

@@ -11,6 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable(['customer_id', 'order_date', 'status', 'total', 'description'])]
 class Order extends Model
 {
+    // Etapas por las que pasa un pedido personalizado
+    const ESTADOS = [
+        'pendiente' => 'Pendiente',
+        'en_produccion' => 'En producción',
+        'terminado' => 'Terminado',
+        'entregado' => 'Entregado',
+    ];
+
     protected function casts(): array
     {
         return [

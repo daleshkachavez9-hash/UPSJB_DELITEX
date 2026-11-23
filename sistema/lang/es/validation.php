@@ -72,5 +72,8 @@ return [
         'items' => 'productos',
         'items.*.product_id' => 'producto',
         'items.*.quantity' => 'cantidad',
+        'items.*.size' => 'talla',
+        'items.*.color' => 'color',
+        'items.*.unit_price' => 'precio',
     ],
 ];

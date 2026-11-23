@@ -17,7 +17,7 @@
     <span class="tile-title">Clientes</span>
     <span class="tile-sub">Registrar y buscar por DNI</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('orders.index') }}">
     <span class="tile-icon soft-azul"><i class="bi bi-clipboard-check"></i></span>
     <span class="tile-title">Pedidos</span>
     <span class="tile-sub">Registrar pedidos personalizados</span>
@@ -27,7 +27,7 @@
     <span class="tile-title">Ventas</span>
     <span class="tile-sub">Ventas con detalle e IGV</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('orders.index') }}">
     <span class="tile-icon soft-salvia"><i class="bi bi-signpost-split"></i></span>
     <span class="tile-title">Seguimiento</span>
     <span class="tile-sub">Estado de cada pedido</span>
