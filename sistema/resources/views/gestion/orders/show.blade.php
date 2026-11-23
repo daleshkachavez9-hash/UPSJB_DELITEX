@@ -20,6 +20,9 @@
         @if ($order->status !== 'entregado')
           <a href="{{ route('orders.edit', $order) }}" class="btn btn-outline-dark btn-sm"><i class="bi bi-pencil-square me-1"></i> Modificar</a>
         @endif
+        @if ($saldo > 0 && $order->status !== 'entregado')
+          <a href="{{ route('payments.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cash-coin me-1"></i> Registrar pago</a>
+        @endif
       </div>
     </div>
 

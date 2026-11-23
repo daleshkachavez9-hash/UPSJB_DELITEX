@@ -52,7 +52,7 @@
     <span class="tile-title">Alertas de stock</span>
     <span class="tile-sub">Insumos por reponer</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('payments.index') }}">
     <span class="tile-icon soft-salvia"><i class="bi bi-cash-coin"></i></span>
     <span class="tile-title">Pagos</span>
     <span class="tile-sub">Adelantos, saldos y recibos</span>

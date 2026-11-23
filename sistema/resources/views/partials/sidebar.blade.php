@@ -48,7 +48,11 @@
        aria-current="{{ request()->is(['inventories']) && request()->boolean('alerts') ? 'page' : null }}">
       <i class="bi bi-exclamation-triangle"></i> Alertas de stock
     </a>
-    <a href="#" class="sidebar-link"><i class="bi bi-cash-coin"></i> Pagos</a>
+    <a href="{{ route('payments.index') }}"
+       class="sidebar-link {{ request()->is(['payments*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['payments*']) ? 'page' : null }}">
+      <i class="bi bi-cash-coin"></i> Pagos
+    </a>
     <a href="#" class="sidebar-link"><i class="bi bi-truck"></i> Entregas</a>
 
     <p class="nav-section">Configuraciones</p>
