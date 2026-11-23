@@ -93,12 +93,12 @@ class ProductController extends Controller
         return to_route('products.index')->with('ok', 'Producto actualizado correctamente.');
     }
 
-    // Eliminar producto (solo si no se ha vendido ni tiene inventario)
+    // Eliminar producto (solo si no se ha vendido, no está en pedidos ni tiene inventario)
     public function destroy(Product $product)
     {
-        if ($product->detailSales()->exists() || $product->inventories()->exists()) {
+        if ($product->detailSales()->exists() || $product->orderDetails()->exists() || $product->inventories()->exists()) {
             return to_route('products.index')
-                ->with('error', 'No se puede eliminar el producto porque tiene ventas o registros de inventario.');
+                ->with('error', 'No se puede eliminar el producto porque tiene ventas, pedidos o registros de inventario.');
         }
 
         // Borra también su imagen
