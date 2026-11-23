@@ -12,7 +12,11 @@
        aria-current="{{ request()->is('/') ? 'page' : null }}">
       <i class="bi bi-grid-1x2"></i> Dashboard
     </a>
-    <a href="#" class="sidebar-link"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+    <a href="{{ route('reports.index') }}"
+       class="sidebar-link {{ request()->is(['reports*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['reports*']) ? 'page' : null }}">
+      <i class="bi bi-file-earmark-bar-graph"></i> Reportes
+    </a>
 
     <p class="nav-section">Gestión</p>
     <a href="{{ route('customers.index') }}"

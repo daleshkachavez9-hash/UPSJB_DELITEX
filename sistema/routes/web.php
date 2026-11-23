@@ -8,12 +8,15 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+// El contenido del reporte lo arma generarReporte() del modelo
+Route::resource('reports', ReportController::class);
 
 // Gestión
 Route::resource('customers', CustomerController::class)->except('show');

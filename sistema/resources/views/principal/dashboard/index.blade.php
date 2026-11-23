@@ -62,7 +62,7 @@
     <span class="tile-title">Entregas</span>
     <span class="tile-sub">Salida de pedidos terminados</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('reports.index') }}">
     <span class="tile-icon soft-azul"><i class="bi bi-bar-chart-line"></i></span>
     <span class="tile-title">Reportes</span>
     <span class="tile-sub">Reportes e informes</span>
