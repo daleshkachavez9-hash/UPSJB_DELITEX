@@ -35,7 +35,11 @@
        aria-current="{{ request()->is(['roles*']) ? 'page' : null }}">
       <i class="bi bi-shield-check"></i> Roles
     </a>
-    <a href="#" class="sidebar-link"><i class="bi bi-person-gear"></i> Usuarios</a>
+    <a href="{{ route('users.index') }}"
+       class="sidebar-link {{ request()->is(['users*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['users*']) ? 'page' : null }}">
+      <i class="bi bi-person-gear"></i> Usuarios
+    </a>
     <a href="#" class="sidebar-link"><i class="bi bi-gear"></i> Configuración</a>
   </nav>
 
