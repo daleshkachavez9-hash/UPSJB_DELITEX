@@ -32,10 +32,10 @@
     <span class="tile-title">Producción</span>
     <span class="tile-sub">Órdenes de trabajo y etapas</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('products.index') }}">
     <span class="tile-icon soft-lavanda"><i class="bi bi-boxes"></i></span>
-    <span class="tile-title">Insumos</span>
-    <span class="tile-sub">Telas, hilos y accesorios</span>
+    <span class="tile-title">Productos</span>
+    <span class="tile-sub">Prendas, telas, hilos y accesorios</span>
   </a>
   <a class="module-tile" href="#">
     <span class="tile-icon soft-azul"><i class="bi bi-box-seam"></i></span>

@@ -23,7 +23,11 @@
     <a href="#" class="sidebar-link"><i class="bi bi-clipboard-check"></i> Pedidos</a>
     <a href="#" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
     <a href="#" class="sidebar-link"><i class="bi bi-scissors"></i> Producción</a>
-    <a href="#" class="sidebar-link"><i class="bi bi-boxes"></i> Insumos</a>
+    <a href="{{ route('products.index') }}"
+       class="sidebar-link {{ request()->is(['products*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['products*']) ? 'page' : null }}">
+      <i class="bi bi-boxes"></i> Productos
+    </a>
     <a href="#" class="sidebar-link"><i class="bi bi-box-seam"></i> Almacén</a>
     <a href="#" class="sidebar-link"><i class="bi bi-exclamation-triangle"></i> Alertas de stock</a>
     <a href="#" class="sidebar-link"><i class="bi bi-cash-coin"></i> Pagos</a>

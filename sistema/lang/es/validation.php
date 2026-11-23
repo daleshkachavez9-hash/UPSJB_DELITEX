@@ -12,9 +12,9 @@ return [
     'digits' => 'El campo :attribute debe tener :digits dígitos.',
     'distinct' => 'El campo :attribute tiene un valor repetido.',
     'email' => 'El campo :attribute debe ser un correo válido.',
-    'exists' => 'El :attribute seleccionado no es válido.',
+    'exists' => 'La opción seleccionada en :attribute no es válida.',
     'image' => 'El campo :attribute debe ser una imagen.',
-    'in' => 'El :attribute seleccionado no es válido.',
+    'in' => 'La opción seleccionada en :attribute no es válida.',
     'integer' => 'El campo :attribute debe ser un número entero.',
     'max' => [
         'numeric' => 'El campo :attribute no debe ser mayor que :max.',
