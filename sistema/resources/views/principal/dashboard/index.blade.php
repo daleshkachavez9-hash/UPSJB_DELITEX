@@ -22,6 +22,11 @@
     <span class="tile-title">Pedidos</span>
     <span class="tile-sub">Registrar pedidos personalizados</span>
   </a>
+  <a class="module-tile" href="{{ route('sales.index') }}">
+    <span class="tile-icon soft-rosa"><i class="bi bi-cart3"></i></span>
+    <span class="tile-title">Ventas</span>
+    <span class="tile-sub">Ventas con detalle e IGV</span>
+  </a>
   <a class="module-tile" href="#">
     <span class="tile-icon soft-salvia"><i class="bi bi-signpost-split"></i></span>
     <span class="tile-title">Seguimiento</span>

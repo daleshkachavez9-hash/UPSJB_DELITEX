@@ -21,6 +21,11 @@
       <i class="bi bi-people"></i> Clientes
     </a>
     <a href="#" class="sidebar-link"><i class="bi bi-clipboard-check"></i> Pedidos</a>
+    <a href="{{ route('sales.index') }}"
+       class="sidebar-link {{ request()->is(['sales*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['sales*']) ? 'page' : null }}">
+      <i class="bi bi-cart3"></i> Ventas
+    </a>
     <a href="#" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
     <a href="#" class="sidebar-link"><i class="bi bi-scissors"></i> Producción</a>
     <a href="{{ route('products.index') }}"
