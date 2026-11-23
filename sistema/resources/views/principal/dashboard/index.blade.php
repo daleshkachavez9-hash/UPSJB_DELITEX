@@ -37,12 +37,12 @@
     <span class="tile-title">Productos</span>
     <span class="tile-sub">Prendas, telas, hilos y accesorios</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('inventories.index') }}">
     <span class="tile-icon soft-azul"><i class="bi bi-box-seam"></i></span>
-    <span class="tile-title">Almacén</span>
-    <span class="tile-sub">Ingresos y salidas de stock</span>
+    <span class="tile-title">Inventario</span>
+    <span class="tile-sub">Stock actual y stock mínimo</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('inventories.index', ['alerts' => 1]) }}">
     <span class="tile-icon soft-rosa"><i class="bi bi-exclamation-triangle"></i></span>
     <span class="tile-title">Alertas de stock</span>
     <span class="tile-sub">Insumos por reponer</span>

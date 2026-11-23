@@ -28,8 +28,16 @@
        aria-current="{{ request()->is(['products*']) ? 'page' : null }}">
       <i class="bi bi-boxes"></i> Productos
     </a>
-    <a href="#" class="sidebar-link"><i class="bi bi-box-seam"></i> Almacén</a>
-    <a href="#" class="sidebar-link"><i class="bi bi-exclamation-triangle"></i> Alertas de stock</a>
+    <a href="{{ route('inventories.index') }}"
+       class="sidebar-link {{ request()->is(['inventories*']) && !request()->boolean('alerts') ? 'active' : null }}"
+       aria-current="{{ request()->is(['inventories*']) && !request()->boolean('alerts') ? 'page' : null }}">
+      <i class="bi bi-box-seam"></i> Inventario
+    </a>
+    <a href="{{ route('inventories.index', ['alerts' => 1]) }}"
+       class="sidebar-link {{ request()->is(['inventories']) && request()->boolean('alerts') ? 'active' : null }}"
+       aria-current="{{ request()->is(['inventories']) && request()->boolean('alerts') ? 'page' : null }}">
+      <i class="bi bi-exclamation-triangle"></i> Alertas de stock
+    </a>
     <a href="#" class="sidebar-link"><i class="bi bi-cash-coin"></i> Pagos</a>
     <a href="#" class="sidebar-link"><i class="bi bi-truck"></i> Entregas</a>
 
