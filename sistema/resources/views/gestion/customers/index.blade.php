@@ -4,24 +4,13 @@
 @section('name_section', 'CLIENTES')
 @section('description', 'Listado de clientes')
 @section('item_section', 'Inicio')
+@section('route_section', route('customers.index'))
 @section('section', 'Clientes')
 @section('module', 'Gestión')
 
 @section('content')
-{{-- Mensajes flash: los envían store(), update() y destroy() --}}
-@if (session('ok'))
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    {{ session('ok') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-  </div>
-@endif
-
-@if (session('error'))
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{ session('error') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-  </div>
-@endif
+{{-- Mensajes flash: ok (verde) y error (rojo) --}}
+@include('partials.alerts')
 
 <div class="card">
   <div class="module-head">
