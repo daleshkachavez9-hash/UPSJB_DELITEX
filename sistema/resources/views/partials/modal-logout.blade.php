@@ -10,7 +10,11 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-        <a href="{{ route('login') }}" class="btn btn-danger"><i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión</a>
+        {{-- POST con @csrf: cerrar sesión cambia el estado, por eso no es un enlace --}}
+        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+          @csrf
+          <button type="submit" class="btn btn-danger"><i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión</button>
+        </form>
       </div>
     </div>
   </div>

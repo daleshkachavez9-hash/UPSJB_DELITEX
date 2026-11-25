@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 #[Fillable(['name', 'email', 'password', 'role_id', 'dni'])]
 #[Hidden(['password', 'remember_token'])]
@@ -50,5 +52,25 @@ class User extends Authenticatable
     public function productions(): HasMany
     {
         return $this->hasMany(Production::class);
+    }
+
+    // Método del diagrama: +iniciarSesion(): bool
+    // Compara la contraseña escrita con la encriptada y, si coincide, abre la sesión del usuario
+    public function iniciarSesion(string $password, bool $recordar = false): bool
+    {
+        if (! Hash::check($password, $this->password)) {
+            return false;
+        }
+
+        Auth::login($this, $recordar);
+
+        return true;
+    }
+
+    // Iniciales para el avatar del menú (María Quispe -> MQ)
+    public function iniciales(): string
+    {
+        return collect(explode(' ', $this->name))->filter()->take(2)
+            ->map(fn ($parte) => mb_strtoupper(mb_substr($parte, 0, 1)))->implode('');
     }
 }

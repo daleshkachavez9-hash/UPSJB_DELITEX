@@ -87,16 +87,17 @@
 
   <div class="sidebar-user dropup">
     <button class="user-card dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      <span class="avatar soft-rosa">MQ</span>
+      {{-- Datos del usuario que inició sesión --}}
+      <span class="avatar soft-rosa">{{ auth()->user()->iniciales() }}</span>
       <span class="user-info">
-        <span class="user-name d-block text-truncate">María Quispe</span>
-        <span class="user-email d-block text-truncate">maria.quispe@delitex.pe</span>
+        <span class="user-name d-block text-truncate">{{ auth()->user()->name }}</span>
+        <span class="user-email d-block text-truncate">{{ auth()->user()->email }}</span>
       </span>
       <i class="bi bi-chevron-expand"></i>
     </button>
     <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Mi perfil</a></li>
-      <li><a class="dropdown-item" href="#"><i class="bi bi-key"></i> Cambiar contraseña</a></li>
+      <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-person"></i> Mi perfil</a></li>
+      <li><a class="dropdown-item" href="{{ route('profile.edit') }}#password"><i class="bi bi-key"></i> Cambiar contraseña</a></li>
       <li><hr class="dropdown-divider"></li>
       <li>
         <button class="dropdown-item text-danger" type="button" data-bs-toggle="modal" data-bs-target="#logoutModal">
