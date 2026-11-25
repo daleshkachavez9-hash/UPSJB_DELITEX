@@ -27,6 +27,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|max:50|unique:categories',
+            'type' => ['required', Rule::in(array_keys(Category::TIPOS))],
             'description' => 'nullable|max:255',
         ]);
 
@@ -46,6 +47,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'max:50', Rule::unique('categories')->ignore($category->id)],
+            'type' => ['required', Rule::in(array_keys(Category::TIPOS))],
             'description' => 'nullable|max:255',
         ]);
 

@@ -19,6 +19,27 @@
       <div class="invalid-feedback">{{ $message }}</div>
     @enderror
   </div>
+
+  {{-- Permisos: módulos a los que pueden entrar los usuarios con este rol --}}
+  <div class="col-12">
+    <label class="form-label d-block">Módulos permitidos</label>
+    @php $marcados = old('modules', $role->modules ?? []); @endphp
+    <div class="row g-2 @error('modules') is-invalid @enderror">
+      @foreach (\App\Models\Role::MODULOS as $valor => $texto)
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="modules[]" value="{{ $valor }}" id="mod_{{ $valor }}"
+                   @checked(in_array($valor, $marcados))>
+            <label class="form-check-label" for="mod_{{ $valor }}">{{ $texto }}</label>
+          </div>
+        </div>
+      @endforeach
+    </div>
+    @error('modules')
+      <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">El dashboard y Mi perfil están disponibles para todos los roles.</small>
+  </div>
 </div>
 
 <div class="d-flex gap-2 mt-4">

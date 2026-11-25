@@ -10,16 +10,13 @@ use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
-    // Cantidad a partir de la cual el stock se considera bajo
-    const LOW_STOCK = 10;
-
     // Unidades de medida de prendas e insumos
     const UNITS = ['unidad', 'metro', 'cono', 'paquete', 'rollo'];
 
     // Listado de productos con búsqueda y filtros
     public function index(Request $request)
     {
-        $products = Product::with('category')                       // carga la categoría en 1 sola consulta (evita N+1)
+        $products = Product::with(['category', 'inventory'])       // carga categoría e inventario en pocas consultas (evita N+1)
             ->when($request->search, function ($query, $search) {  // solo si escribió algo en el buscador
                 $query->where('name', 'like', "%{$search}%");
             })
@@ -27,16 +24,15 @@ class ProductController extends Controller
                 $query->where('category_id', $categoryId);
             })
             ->when($request->boolean('low_stock'), function ($query) {     // solo si marcó "stock bajo"
-                $query->where('quantity', '<=', self::LOW_STOCK);
+                // El mismo criterio que las alertas: stock actual menor o igual al stock mínimo del inventario
+                $query->whereHas('inventory', fn ($q) => $q->whereColumn('current_stock', '<=', 'minimum_stock'));
             })
             ->orderBy('name')
             ->get();
 
         // Para llenar el <select> del filtro
         $categories = Category::orderBy('name')->get();
-        $lowStock = self::LOW_STOCK;
-
-        return view('gestion.products.index', compact('products', 'categories', 'lowStock'));
+        return view('gestion.products.index', compact('products', 'categories'));
     }
 
     // Formulario para crear
@@ -92,7 +88,7 @@ class ProductController extends Controller
 
         // Si cambió la cantidad, el inventario del producto queda con el mismo stock
         if ($product->wasChanged('quantity')) {
-            $product->inventories()->update(['current_stock' => $product->quantity, 'last_update' => now()]);
+            $product->inventory()->update(['current_stock' => $product->quantity, 'last_update' => now()]);
         }
 
         return to_route('products.index')->with('ok', 'Producto actualizado correctamente.');
@@ -101,7 +97,7 @@ class ProductController extends Controller
     // Eliminar producto (solo si no se ha vendido, no está en pedidos ni tiene inventario)
     public function destroy(Product $product)
     {
-        if ($product->detailSales()->exists() || $product->orderDetails()->exists() || $product->inventories()->exists()) {
+        if ($product->detailSales()->exists() || $product->orderDetails()->exists() || $product->inventory()->exists()) {
             return to_route('products.index')
                 ->with('error', 'No se puede eliminar el producto porque tiene ventas, pedidos o registros de inventario.');
         }

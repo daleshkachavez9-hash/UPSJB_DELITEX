@@ -67,6 +67,12 @@ class User extends Authenticatable
         return true;
     }
 
+    // Permiso por rol: ¿el usuario puede entrar a este módulo?
+    public function puede(string $modulo): bool
+    {
+        return (bool) $this->role?->permite($modulo);
+    }
+
     // Iniciales para el avatar del menú (María Quispe -> MQ)
     public function iniciales(): string
     {

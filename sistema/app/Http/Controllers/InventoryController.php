@@ -28,7 +28,7 @@ class InventoryController extends Controller
     // Formulario para crear (solo productos que todavía no tienen inventario)
     public function create()
     {
-        $products = Product::doesntHave('inventories')->orderBy('name')->get();
+        $products = Product::doesntHave('inventory')->orderBy('name')->get();
 
         return view('gestion.inventories.create', compact('products'));
     }
@@ -49,7 +49,7 @@ class InventoryController extends Controller
     public function edit(Inventory $inventory)
     {
         $products = Product::where(function ($q) use ($inventory) {
-            $q->doesntHave('inventories')->orWhere('id', $inventory->product_id);
+            $q->doesntHave('inventory')->orWhere('id', $inventory->product_id);
         })->orderBy('name')->get();
 
         return view('gestion.inventories.edit', compact('inventory', 'products'));

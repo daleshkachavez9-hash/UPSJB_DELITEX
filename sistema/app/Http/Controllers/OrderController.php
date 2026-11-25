@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
@@ -12,7 +13,7 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
-    // Listado de pedidos con búsqueda por número, DNI o nombre y filtro por estado
+    // Listado de pedidos con búsqueda por número, DNI o RUC, o nombre y filtro por estado
     public function index(Request $request)
     {
         $orders = Order::with('customer')
@@ -20,7 +21,7 @@ class OrderController extends Controller
             ->when($request->search, function ($query, $search) {
                 $numero = (int) ltrim($search, '0');
                 $query->where(function ($q) use ($search, $numero) {
-                    $q->whereHas('customer', fn ($c) => $c->where('dni', 'like', "%{$search}%")
+                    $q->whereHas('customer', fn ($c) => $c->where('document_number', 'like', "%{$search}%")
                         ->orWhere('name', 'like', "%{$search}%"));
                     if ($numero > 0) {
                         $q->orWhere('id', $numero);
@@ -71,9 +72,8 @@ class OrderController extends Controller
         $order->load(['customer', 'details.product', 'payments', 'delivery', 'sale', 'productions.user']);
         $pagado = (float) $order->payments->sum('amount');
         $saldo = round((float) $order->total - $pagado, 2);
-        $estados = Order::ESTADOS;
 
-        return view('gestion.orders.show', compact('order', 'pagado', 'saldo', 'estados'));
+        return view('gestion.orders.show', compact('order', 'pagado', 'saldo'));
     }
 
     // Formulario para modificar un pedido personalizado
@@ -114,26 +114,12 @@ class OrderController extends Controller
                     'items' => 'El total del pedido no puede ser menor a lo ya pagado (S/ ' . number_format($pagado, 2) . ').',
                 ]);
             }
+
+            // Con el nuevo total, un pago que antes era la cancelación puede pasar a ser un adelanto
+            $order->actualizarEstadoPagos();
         });
 
         return to_route('orders.show', $order)->with('ok', 'Pedido actualizado correctamente.');
-    }
-
-    // Cambiar la etapa del pedido (método del diagrama: actualizarEstado)
-    public function updateStatus(Request $request, Order $order)
-    {
-        $request->validate([
-            // "entregado" solo se asigna al confirmar la entrega
-            'status' => ['required', Rule::in(array_diff(array_keys(Order::ESTADOS), ['entregado']))],
-        ]);
-
-        if ($order->status === 'entregado') {
-            return to_route('orders.show', $order)->with('error', 'El pedido ya fue entregado.');
-        }
-
-        $order->actualizarEstado($request->status);
-
-        return to_route('orders.show', $order)->with('ok', 'Estado del pedido actualizado.');
     }
 
     // Eliminar pedido (solo si no tiene pagos, entrega, venta ni producción)
@@ -172,7 +158,7 @@ class OrderController extends Controller
     {
         return [
             'customers' => Customer::orderBy('name')->get(),
-            'products' => Product::with('category')->where('status', 'activo')->orderBy('name')->get(),
+            'products' => Product::with('category')->prendas()->where('status', 'activo')->orderBy('name')->get(),
         ];
     }
 
@@ -180,10 +166,11 @@ class OrderController extends Controller
     {
         return [
             'customer_id' => 'required|exists:customers,id',
-            'order_date' => 'required|date',
+            'order_date' => 'required|date|before_or_equal:today',
             'description' => 'nullable|max:1000',
             'items' => 'required|array|min:1',
-            'items.*.product_id' => 'nullable|exists:products,id',
+            // Prenda del catálogo (opcional); los insumos no se piden
+            'items.*.product_id' => ['nullable', Rule::exists('products', 'id')->where(fn ($q) => $q->whereIn('category_id', Category::where('type', 'prenda')->select('id')))],
             'items.*.size' => 'nullable|max:20',
             'items.*.color' => 'nullable|max:30',
             'items.*.quantity' => 'required|integer|min:1',
@@ -195,6 +182,7 @@ class OrderController extends Controller
     {
         return [
             'items.required' => 'Debe agregar al menos una prenda al pedido.',
+            'items.*.product_id.exists' => 'Solo se piden prendas; los insumos son de uso del taller.',
         ];
     }
 }

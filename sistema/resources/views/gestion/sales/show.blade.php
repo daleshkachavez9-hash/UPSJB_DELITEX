@@ -32,13 +32,15 @@
         <span class="fw-semibold">{{ $sale->customer->name }}</span>
       </div>
       <div class="col-12 col-md-4 mb-2">
-        <small class="text-muted d-block">DNI</small>
-        <span class="fw-semibold">{{ $sale->customer->dni }}</span>
+        <small class="text-muted d-block">Documento</small>
+        <span class="fw-semibold">{{ $sale->customer->documento() }}</span>
       </div>
       <div class="col-12 col-md-4 mb-2">
         <small class="text-muted d-block">Pedido</small>
-        @if ($sale->order)
+        @if ($sale->order && auth()->user()->puede('seguimiento'))
           <a href="{{ route('orders.show', $sale->order) }}" class="fw-semibold">Nº {{ str_pad($sale->order->id, 6, '0', STR_PAD_LEFT) }}</a>
+        @elseif ($sale->order)
+          <span class="fw-semibold">Nº {{ str_pad($sale->order->id, 6, '0', STR_PAD_LEFT) }}</span>
         @else
           <span class="fw-semibold">Venta directa</span>
         @endif

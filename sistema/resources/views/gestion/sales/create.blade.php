@@ -24,11 +24,11 @@
       <div class="row g-3">
         <div class="col-md-5">
           <label for="customer_label" class="form-label">Cliente</label>
-          {{-- Se busca por DNI o nombre; el id elegido viaja en el campo oculto customer_id --}}
+          {{-- Se busca por DNI o RUC, o por nombre; el id elegido viaja en el campo oculto customer_id --}}
           <div class="input-group has-validation">
-            <input type="text" id="customer_label" readonly placeholder="Busque por DNI o nombre"
+            <input type="text" id="customer_label" readonly placeholder="Busque por DNI o RUC, o por nombre"
                    class="form-control bg-white @error('customer_id') is-invalid @enderror"
-                   value="{{ $clienteElegido ? $clienteElegido->name . ' - DNI ' . $clienteElegido->dni : '' }}">
+                   value="{{ $clienteElegido ? $clienteElegido->name . ' - ' . $clienteElegido->documento() : '' }}">
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCliente">
               <i class="bi bi-search me-1"></i> Buscar
             </button>
@@ -114,13 +114,13 @@
 @include('partials.modal-buscar', [
   'id' => 'modalCliente',
   'titulo' => 'Buscar cliente',
-  'placeholder' => 'Escriba el DNI o el nombre del cliente',
+  'placeholder' => 'Escriba el DNI o RUC, o el nombre del cliente',
   'columnas' => ['DNI', 'Nombre', 'Teléfono'],
   'filas' => $customers->map(fn ($c) => [
     'id' => $c->id,
-    'texto' => $c->dni . ' ' . $c->name,
-    'celdas' => [$c->dni, $c->name, $c->phone ?? '—'],
-    'datos' => ['label' => $c->name . ' - DNI ' . $c->dni],
+    'texto' => $c->document_number . ' ' . $c->name,
+    'celdas' => [$c->documento(), $c->name, $c->phone ?? '—'],
+    'datos' => ['label' => $c->name . ' - ' . $c->documento()],
   ])->all(),
 ])
 

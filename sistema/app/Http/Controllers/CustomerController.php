@@ -25,12 +25,7 @@ class CustomerController extends Controller
     // CREATE: validar, guardar, redirigir
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:150',
-            'dni' => 'required|digits:8|unique:customers',
-            'phone' => 'nullable|max:15',
-            'address' => 'nullable|max:255',
-        ], $this->mensajes());
+        $validated = $request->validate($this->reglas($request), $this->mensajes($request));
 
         Customer::create($validated);
 
@@ -47,13 +42,7 @@ class CustomerController extends Controller
     // UPDATE: validar, actualizar, redirigir
     public function update(Request $request, Customer $customer)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:150',
-            'dni' => ['required', 'digits:8',
-                Rule::unique('customers', 'dni')->ignore($customer->id)],
-            'phone' => 'nullable|max:15',
-            'address' => 'nullable|max:255',
-        ], $this->mensajes());
+        $validated = $request->validate($this->reglas($request, $customer), $this->mensajes($request));
 
         $customer->update($validated);
 
@@ -75,14 +64,38 @@ class CustomerController extends Controller
             ->with('ok', 'Cliente eliminado correctamente.');
     }
 
-    private function mensajes(): array
+    // El número de dígitos depende del tipo de documento elegido (DNI 8, RUC 11)
+    private function reglas(Request $request, ?Customer $customer = null): array
     {
+        $digitos = Customer::DOCUMENTOS[$request->document_type] ?? 8;
+        $numero = ['required', "digits:$digitos", Rule::unique('customers', 'document_number')->ignore($customer?->id)];
+        if ($request->document_type === 'RUC') {
+            // El RUC empieza con 10 (persona con negocio) o con 15, 16, 17 o 20 (empresas y otras entidades)
+            $numero[] = 'regex:/^(10|15|16|17|20)/';
+        }
+
         return [
-            'name.required' => 'Escribe el nombre del cliente.',
+            'document_type' => ['required', Rule::in(array_keys(Customer::DOCUMENTOS))],
+            'document_number' => $numero,
+            'name' => 'required|max:150',
+            'phone' => 'nullable|max:15',
+            'address' => 'nullable|max:255',
+        ];
+    }
+
+    private function mensajes(Request $request): array
+    {
+        $tipo = $request->document_type === 'RUC' ? 'RUC' : 'DNI';
+
+        return [
+            'name.required' => 'Escribe el nombre o la razón social del cliente.',
             'name.max' => 'El nombre no debe superar los 150 caracteres.',
-            'dni.required' => 'Escribe el DNI del cliente.',
-            'dni.digits' => 'El DNI debe tener 8 dígitos.',
-            'dni.unique' => 'Ese DNI ya está registrado.',
+            'document_type.required' => 'Elige si el documento es DNI o RUC.',
+            'document_type.in' => 'El tipo de documento debe ser DNI o RUC.',
+            'document_number.required' => "Escribe el $tipo del cliente.",
+            'document_number.digits' => "El $tipo debe tener " . Customer::DOCUMENTOS[$tipo] . ' dígitos.',
+            'document_number.regex' => 'El RUC debe empezar con 10, 15, 16, 17 o 20.',
+            'document_number.unique' => 'Ese número de documento ya está registrado.',
             'phone.max' => 'El teléfono no debe superar los 15 caracteres.',
             'address.max' => 'La dirección no debe superar los 255 caracteres.',
         ];

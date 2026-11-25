@@ -17,11 +17,11 @@
 <div class="row g-3">
   <div class="col-md-6">
     <label for="customer_label" class="form-label">Cliente</label>
-    {{-- Se busca por DNI o nombre; el id elegido viaja en el campo oculto customer_id --}}
+    {{-- Se busca por DNI o RUC, o por nombre; el id elegido viaja en el campo oculto customer_id --}}
     <div class="input-group has-validation">
-      <input type="text" id="customer_label" readonly placeholder="Busque por DNI o nombre"
+      <input type="text" id="customer_label" readonly placeholder="Busque por DNI o RUC, o por nombre"
              class="form-control bg-white @error('customer_id') is-invalid @enderror"
-             value="{{ $clienteElegido ? $clienteElegido->name . ' - DNI ' . $clienteElegido->dni : '' }}">
+             value="{{ $clienteElegido ? $clienteElegido->name . ' - ' . $clienteElegido->documento() : '' }}">
       <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCliente">
         <i class="bi bi-search me-1"></i> Buscar
       </button>
@@ -34,7 +34,7 @@
 
   <div class="col-md-3">
     <label for="order_date" class="form-label">Fecha del pedido</label>
-    <input type="date" name="order_date" id="order_date"
+    <input type="date" name="order_date" id="order_date" max="{{ now()->format('Y-m-d') }}"
            class="form-control @error('order_date') is-invalid @enderror"
            value="{{ old('order_date', isset($order) ? $order->order_date->format('Y-m-d') : now()->format('Y-m-d')) }}">
     @error('order_date')

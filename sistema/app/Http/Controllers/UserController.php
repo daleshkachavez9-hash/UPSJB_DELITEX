@@ -18,9 +18,9 @@ class UserController extends Controller
     }
 
     // Formulario para crear
-    public function create()
+    public function create(Request $request)
     {
-        $roles = Role::orderBy('name')->get();
+        $roles = $this->rolesAsignables($request);
 
         return view('settings.users.create', compact('roles'));
     }
@@ -29,7 +29,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'role_id' => 'required|exists:roles,id',
+            'role_id' => ['required', Rule::in($this->rolesAsignables($request)->pluck('id'))],
             'name' => 'required|max:255',
             'dni' => 'required|digits:8|unique:users',
             'email' => 'required|email|max:255|unique:users',
@@ -42,9 +42,12 @@ class UserController extends Controller
     }
 
     // Formulario para editar
-    public function edit(User $user)
+    public function edit(Request $request, User $user)
     {
-        $roles = Role::orderBy('name')->get();
+        $roles = $this->rolesAsignables($request);
+        if (! $roles->contains('id', $user->role_id)) {
+            return to_route('users.index')->with('error', 'No puedes modificar a un usuario con más permisos que tú.');
+        }
 
         return view('settings.users.edit', compact('user', 'roles'));
     }
@@ -52,13 +55,23 @@ class UserController extends Controller
     // Actualizar usuario
     public function update(Request $request, User $user)
     {
+        $asignables = $this->rolesAsignables($request);
+        if (! $asignables->contains('id', $user->role_id)) {
+            return to_route('users.index')->with('error', 'No puedes modificar a un usuario con más permisos que tú.');
+        }
+
         $validated = $request->validate([
-            'role_id' => 'required|exists:roles,id',
+            'role_id' => ['required', Rule::in($asignables->pluck('id'))],
             'name' => 'required|max:255',
             'dni' => ['required', 'digits:8', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|min:8|confirmed',
         ]);
+
+        // Nadie cambia su propio rol: así no puede darse más permisos ni quitarse el acceso por error
+        if ($user->is($request->user()) && (int) $validated['role_id'] !== $user->role_id) {
+            return back()->withInput()->withErrors(['role_id' => 'No puedes cambiar tu propio rol.']);
+        }
 
         // Si no escribió contraseña nueva, se mantiene la actual
         if (empty($validated['password'])) {
@@ -71,8 +84,16 @@ class UserController extends Controller
     }
 
     // Eliminar usuario (solo si no tiene ventas ni reportes)
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
+        if ($user->is($request->user())) {
+            return to_route('users.index')->with('error', 'No puedes eliminar tu propio usuario.');
+        }
+
+        if (! $this->rolesAsignables($request)->contains('id', $user->role_id)) {
+            return to_route('users.index')->with('error', 'No puedes eliminar a un usuario con más permisos que tú.');
+        }
+
         if ($user->sales()->exists() || $user->reports()->exists() || $user->productions()->exists()) {
             return to_route('users.index')
                 ->with('error', 'No se puede eliminar el usuario porque tiene ventas, reportes o trabajos de producción registrados.');
@@ -81,5 +102,16 @@ class UserController extends Controller
         $user->delete();
 
         return to_route('users.index')->with('ok', 'Usuario eliminado correctamente.');
+    }
+
+    // Roles que el usuario puede asignar: solo los que tienen los mismos módulos que el suyo o menos.
+    // Así una Administradora no puede crear (ni convertirse en) Dueña.
+    private function rolesAsignables(Request $request)
+    {
+        $propios = $request->user()->role->modules ?? [];
+
+        return Role::orderBy('name')->get()
+            ->filter(fn ($rol) => empty(array_diff($rol->modules ?? [], $propios)))
+            ->values();
     }
 }

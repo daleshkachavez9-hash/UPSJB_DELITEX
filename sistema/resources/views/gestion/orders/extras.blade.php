@@ -6,13 +6,13 @@
 @include('partials.modal-buscar', [
   'id' => 'modalCliente',
   'titulo' => 'Buscar cliente',
-  'placeholder' => 'Escriba el DNI o el nombre del cliente',
+  'placeholder' => 'Escriba el DNI o RUC, o el nombre del cliente',
   'columnas' => ['DNI', 'Nombre', 'Teléfono'],
   'filas' => $customers->map(fn ($c) => [
     'id' => $c->id,
-    'texto' => $c->dni . ' ' . $c->name,
-    'celdas' => [$c->dni, $c->name, $c->phone ?? '—'],
-    'datos' => ['label' => $c->name . ' - DNI ' . $c->dni],
+    'texto' => $c->document_number . ' ' . $c->name,
+    'celdas' => [$c->documento(), $c->name, $c->phone ?? '—'],
+    'datos' => ['label' => $c->name . ' - ' . $c->documento()],
   ])->all(),
 ])
 

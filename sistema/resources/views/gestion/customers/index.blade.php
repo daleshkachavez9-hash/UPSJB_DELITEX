@@ -29,7 +29,7 @@
         <thead>
           <tr>
             <th class="text-center">Nº</th>
-            <th>DNI</th>
+            <th>Documento</th>
             <th>Cliente</th>
             <th>Teléfono</th>
             <th>Dirección</th>
@@ -40,7 +40,7 @@
           @forelse ($customers as $customer)
             <tr>
               <td class="text-center">{{ $loop->iteration }}</td>
-              <td>{{ $customer->dni }}</td>
+              <td>{{ $customer->documento() }}</td>
               <td>{{ $customer->name }}</td>
               <td>{{ $customer->phone }}</td>
               <td>{{ $customer->address }}</td>

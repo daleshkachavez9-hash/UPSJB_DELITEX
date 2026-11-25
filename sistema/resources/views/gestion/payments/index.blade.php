@@ -43,14 +43,16 @@
               <td class="text-center">{{ $loop->iteration }}</td>
               <td class="text-center">{{ $payment->payment_date->format('d/m/Y') }}</td>
               <td class="text-center">
-                <a href="{{ route('orders.show', $payment->order) }}">Nº {{ str_pad($payment->order_id, 6, '0', STR_PAD_LEFT) }}</a>
+                @can('modulo', 'seguimiento')<a href="{{ route('orders.show', $payment->order) }}">Nº {{ str_pad($payment->order_id, 6, '0', STR_PAD_LEFT) }}</a>@else Nº {{ str_pad($payment->order_id, 6, '0', STR_PAD_LEFT) }}@endcan
               </td>
               <td>{{ $payment->order->customer->name }}</td>
               <td>{{ $payment->payment_type }}</td>
               <td class="text-end">S/ {{ number_format($payment->amount, 2) }}</td>
               <td class="text-center">
-                <span class="badge {{ $payment->status === 'completo' ? 'bg-success' : 'bg-warning text-dark' }}">
-                  {{ $payment->status === 'completo' ? 'Cancela el pedido' : 'Parcial' }}
+                {{-- Adelanto: todavía queda saldo. Cancelación: con este pago el pedido quedó pagado. --}}
+                <span class="badge {{ $payment->status === 'cancelacion' ? 'bg-success' : 'bg-warning text-dark' }}"
+                      title="{{ $payment->status === 'cancelacion' ? 'Con este pago el pedido quedó pagado' : 'Después de este pago todavía quedaba saldo' }}">
+                  {{ \App\Models\Payment::ESTADOS[$payment->status] ?? $payment->status }}
                 </span>
               </td>
               <td class="text-end">
@@ -59,9 +61,11 @@
                     <i class="bi bi-three-dots-vertical"></i>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <a class="dropdown-item" href="{{ route('orders.show', $payment->order) }}"><i class="bi bi-eye"></i> Ver pedido</a>
-                    </li>
+                    @can('modulo', 'seguimiento')
+                      <li>
+                        <a class="dropdown-item" href="{{ route('orders.show', $payment->order) }}"><i class="bi bi-eye"></i> Ver pedido</a>
+                      </li>
+                    @endcan
                     <li>
                       <form method="POST" action="{{ route('payments.destroy', $payment) }}"
                             onsubmit="return confirm('¿Seguro que desea anular este pago?');">

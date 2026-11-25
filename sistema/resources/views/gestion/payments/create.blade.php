@@ -21,7 +21,7 @@
         <div class="col-md-7">
           <label for="order_label" class="form-label">Pedido</label>
           <div class="input-group has-validation">
-            <input type="text" id="order_label" readonly placeholder="Busque por Nº de pedido, DNI o nombre"
+            <input type="text" id="order_label" readonly placeholder="Busque por Nº de pedido, documento o nombre"
                    class="form-control bg-white @error('order_id') is-invalid @enderror"
                    value="{{ $pedidoElegido ? 'Nº ' . str_pad($pedidoElegido->id, 6, '0', STR_PAD_LEFT) . ' - ' . $pedidoElegido->customer->name : '' }}">
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalPedido">
@@ -51,7 +51,7 @@
 
         <div class="col-md-4">
           <label for="payment_date" class="form-label">Fecha de pago</label>
-          <input type="date" name="payment_date" id="payment_date"
+          <input type="date" name="payment_date" id="payment_date" max="{{ now()->format('Y-m-d') }}"
                  class="form-control @error('payment_date') is-invalid @enderror"
                  value="{{ old('payment_date', now()->format('Y-m-d')) }}">
           @error('payment_date')
@@ -83,12 +83,12 @@
 @include('partials.modal-buscar', [
   'id' => 'modalPedido',
   'titulo' => 'Buscar pedido con saldo pendiente',
-  'placeholder' => 'Escriba el Nº de pedido, el DNI o el nombre del cliente',
-  'columnas' => ['Pedido', 'Cliente', 'DNI', 'Total', 'Saldo'],
+  'placeholder' => 'Escriba el Nº de pedido, el DNI o RUC, o el nombre del cliente',
+  'columnas' => ['Pedido', 'Cliente', 'Documento', 'Total', 'Saldo'],
   'filas' => $orders->map(fn ($o) => [
     'id' => $o->id,
-    'texto' => str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' ' . $o->customer->dni . ' ' . $o->customer->name,
-    'celdas' => ['Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT), $o->customer->name, $o->customer->dni, 'S/ ' . number_format($o->total, 2), 'S/ ' . number_format($saldoDe($o), 2)],
+    'texto' => str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' ' . $o->customer->document_number . ' ' . $o->customer->name,
+    'celdas' => ['Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT), $o->customer->name, $o->customer->documento(), 'S/ ' . number_format($o->total, 2), 'S/ ' . number_format($saldoDe($o), 2)],
     'datos' => [
       'label' => 'Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' - ' . $o->customer->name,
       'info' => 'Total S/ ' . number_format($o->total, 2) . ' · Pagado S/ ' . number_format($o->payments_sum_amount ?? 0, 2) . ' · Saldo S/ ' . number_format($saldoDe($o), 2),

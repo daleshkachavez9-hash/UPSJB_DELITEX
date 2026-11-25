@@ -69,4 +69,19 @@ class Order extends Model
     {
         $this->update(['status' => $estado]);
     }
+
+    // Recorre los pagos en orden de fecha: los que dejan saldo son "adelanto" y el que
+    // completa el total es la "cancelacion". Se vuelve a calcular al registrar o anular
+    // un pago y al cambiar el total, así el estado nunca queda desactualizado.
+    public function actualizarEstadoPagos(): void
+    {
+        $acumulado = 0;
+        foreach ($this->payments()->orderBy('payment_date')->orderBy('id')->get() as $pago) {
+            $acumulado = round($acumulado + (float) $pago->amount, 2);
+            $estado = $acumulado >= (float) $this->total ? 'cancelacion' : 'adelanto';
+            if ($pago->status !== $estado) {
+                $pago->update(['status' => $estado]);
+            }
+        }
+    }
 }

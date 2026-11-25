@@ -74,7 +74,7 @@ class DeliveryController extends Controller
         return to_route('deliveries.index')->with('ok', 'Entrega actualizada correctamente.');
     }
 
-    // Confirmar la entrega: solo si el pedido está pagado por completo
+    // Confirmar la entrega: solo si el pedido ya está terminado y pagado por completo
     public function confirm(Delivery $delivery)
     {
         if ($delivery->status === 'entregado') {
@@ -83,10 +83,7 @@ class DeliveryController extends Controller
 
         // Método del diagrama: confirmarEntrega()
         if (! $delivery->confirmarEntrega()) {
-            $saldo = (float) $delivery->order->total - (float) $delivery->order->payments()->sum('amount');
-
-            return to_route('deliveries.index')
-                ->with('error', 'No se puede entregar: el pedido tiene un saldo pendiente de S/ ' . number_format($saldo, 2) . '.');
+            return to_route('deliveries.index')->with('error', 'No se puede entregar: ' . $delivery->impedimento());
         }
 
         return to_route('deliveries.index')->with('ok', 'Entrega confirmada. El pedido quedó como entregado.');

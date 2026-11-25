@@ -19,7 +19,8 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::firstOrCreate(['name' => $role['name']], $role);
+            // Cada rol con sus módulos permitidos (permisos)
+            Role::updateOrCreate(['name' => $role['name']], $role + ['modules' => Role::MODULOS_POR_DEFECTO[$role['name']]]);
         }
     }
 }

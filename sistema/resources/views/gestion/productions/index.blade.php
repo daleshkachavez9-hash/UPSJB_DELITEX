@@ -27,7 +27,7 @@
   <div class="card-body pb-0">
     <form action="{{ route('productions.index') }}" method="GET" class="row g-2 align-items-center">
       <div class="col-12 col-md-5">
-        <input type="text" name="search" class="form-control" placeholder="Buscar por Nº de pedido, DNI o nombre del cliente"
+        <input type="text" name="search" class="form-control" placeholder="Buscar por Nº de pedido, DNI o RUC, o nombre del cliente"
                value="{{ request('search') }}">
       </div>
       <div class="col-12 col-md-3">
@@ -74,7 +74,7 @@
             <tr>
               <td class="text-center">{{ $loop->iteration }}</td>
               <td class="text-center">
-                <a href="{{ route('orders.show', $production->order) }}">Nº {{ str_pad($production->order_id, 6, '0', STR_PAD_LEFT) }}</a>
+                @can('modulo', 'seguimiento')<a href="{{ route('orders.show', $production->order) }}">Nº {{ str_pad($production->order_id, 6, '0', STR_PAD_LEFT) }}</a>@else Nº {{ str_pad($production->order_id, 6, '0', STR_PAD_LEFT) }}@endcan
               </td>
               <td>{{ $production->order->customer->name }}</td>
               <td>
@@ -93,9 +93,11 @@
                     <i class="bi bi-three-dots-vertical"></i>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <a class="dropdown-item" href="{{ route('orders.show', $production->order) }}"><i class="bi bi-eye"></i> Ver pedido</a>
-                    </li>
+                    @can('modulo', 'seguimiento')
+                      <li>
+                        <a class="dropdown-item" href="{{ route('orders.show', $production->order) }}"><i class="bi bi-eye"></i> Ver pedido</a>
+                      </li>
+                    @endcan
                     @if ($production->status === 'pendiente')
                       <li>
                         {{-- Método del diagrama: iniciarProduccion() --}}

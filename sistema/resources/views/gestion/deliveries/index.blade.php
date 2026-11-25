@@ -42,7 +42,7 @@
             <tr>
               <td class="text-center">{{ $loop->iteration }}</td>
               <td class="text-center">
-                <a href="{{ route('orders.show', $delivery->order) }}">Nº {{ str_pad($delivery->order_id, 6, '0', STR_PAD_LEFT) }}</a>
+                @can('modulo', 'seguimiento')<a href="{{ route('orders.show', $delivery->order) }}">Nº {{ str_pad($delivery->order_id, 6, '0', STR_PAD_LEFT) }}</a>@else Nº {{ str_pad($delivery->order_id, 6, '0', STR_PAD_LEFT) }}@endcan
               </td>
               <td>{{ $delivery->order->customer->name }}</td>
               <td class="text-center">{{ $delivery->delivery_date?->format('d/m/Y') ?? 'Por definir' }}</td>
@@ -58,9 +58,11 @@
                     <i class="bi bi-three-dots-vertical"></i>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <a class="dropdown-item" href="{{ route('orders.show', $delivery->order) }}"><i class="bi bi-eye"></i> Ver pedido</a>
-                    </li>
+                    @can('modulo', 'seguimiento')
+                      <li>
+                        <a class="dropdown-item" href="{{ route('orders.show', $delivery->order) }}"><i class="bi bi-eye"></i> Ver pedido</a>
+                      </li>
+                    @endcan
                     @if ($delivery->status !== 'entregado')
                       <li>
                         {{-- Método del diagrama: confirmarEntrega() (solo con el pedido pagado por completo) --}}

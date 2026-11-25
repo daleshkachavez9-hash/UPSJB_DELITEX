@@ -45,7 +45,7 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'order_id' => 'required|exists:orders,id',
             'amount' => 'required|numeric|min:0.01',
-            'payment_date' => 'required|date',
+            'payment_date' => 'required|date|before_or_equal:today',
             'payment_type' => ['required', Rule::in(self::TIPOS)],
         ]);
 
@@ -57,7 +57,14 @@ class PaymentController extends Controller
                 throw ValidationException::withMessages(['order_id' => 'El pedido ya fue entregado.']);
             }
 
-            $payment = $order->payments()->create($validated + ['status' => 'parcial']);
+            // El pago no puede ser de antes de que existiera el pedido
+            if ($validated['payment_date'] < $order->order_date->format('Y-m-d')) {
+                throw ValidationException::withMessages([
+                    'payment_date' => 'La fecha de pago no puede ser anterior a la fecha del pedido (' . $order->order_date->format('d/m/Y') . ').',
+                ]);
+            }
+
+            $payment = $order->payments()->create($validated);
 
             // Método del diagrama: calcularSaldo()
             $saldo = $payment->calcularSaldo();
@@ -67,7 +74,8 @@ class PaymentController extends Controller
                 ]);
             }
 
-            $payment->update(['status' => $saldo == 0 ? 'completo' : 'parcial']);
+            // Adelanto o cancelación según lo pagado hasta ahora
+            $order->actualizarEstadoPagos();
         });
 
         return to_route('orders.show', $validated['order_id'])->with('ok', 'Pago registrado correctamente.');
@@ -81,7 +89,10 @@ class PaymentController extends Controller
                 ->with('error', 'No se puede anular el pago porque el pedido ya fue entregado.');
         }
 
+        $order = $payment->order;
         $payment->delete();
+        // Si se anula un pago, el que antes cancelaba el pedido puede volver a ser un adelanto
+        $order->actualizarEstadoPagos();
 
         return to_route('payments.index')->with('ok', 'Pago anulado correctamente.');
     }
