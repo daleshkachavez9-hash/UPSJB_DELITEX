@@ -44,6 +44,20 @@ Encender el servidor y abrir `http://127.0.0.1:8000`:
 php artisan serve
 ```
 
+Todo el sistema pide iniciar sesión. Se ingresa con el correo o el DNI y la contraseña; cada usuario puede cambiar sus datos y su contraseña desde **Mi perfil** (menú del usuario, abajo a la izquierda).
+
+## Módulos
+
+| Grupo | Módulos |
+|---|---|
+| Principal | Dashboard con resumen (pedidos activos, producción, stock bajo y saldo por cobrar) y Reportes de ventas, pedidos, pagos, inventario y producción |
+| Gestión | Clientes, Pedidos (con su seguimiento), Ventas, Producción, Productos, Inventario y alertas de stock, Pagos y Entregas |
+| Configuraciones | Roles, Usuarios, Categorías y Mi perfil |
+
+Flujo de un pedido personalizado: se registra el pedido → se envía a producción y avanza por etapas (corte, confección, estampado o bordado, acabado y control de calidad) → se registran los pagos → se confirma la entrega cuando está pagado → se genera su venta (comprobante), sin volver a cobrar.
+
+Las ventas directas de productos del catálogo se registran en Ventas y descuentan el stock del producto y de su inventario.
+
 Después de cada Pull, si hay migraciones nuevas, se ejecuta `php artisan migrate` (o `php artisan migrate:fresh --seed` para reconstruir la base desde cero).
 
 ## Estructura principal
