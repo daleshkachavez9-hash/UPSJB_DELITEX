@@ -6,7 +6,8 @@
     <select name="product_id" id="product_id" class="form-select @error('product_id') is-invalid @enderror">
       <option value="">-- Seleccione --</option>
       @foreach ($products as $product)
-        <option value="{{ $product->id }}" @selected(old('product_id', $inventory->product_id ?? '') == $product->id)>
+        <option value="{{ $product->id }}" data-cantidad="{{ (float) $product->quantity }}"
+                @selected(old('product_id', $inventory->product_id ?? '') == $product->id)>
           {{ $product->name }} ({{ $product->unit }})
         </option>
       @endforeach
@@ -34,6 +35,7 @@
     @error('current_stock')
       <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+    <small class="text-muted">Al guardar, la cantidad del producto se actualiza con este stock.</small>
   </div>
 
   <div class="col-md-6">
@@ -51,3 +53,15 @@
   <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> Guardar</button>
   <a href="{{ route('inventories.index') }}" class="btn btn-outline-dark">Cancelar</a>
 </div>
+
+@push('scripts')
+<script>
+  // Al elegir el producto se propone su cantidad actual como stock
+  document.getElementById('product_id').addEventListener('change', e => {
+    const opcion = e.target.selectedOptions[0];
+    if (opcion.dataset.cantidad !== undefined) {
+      document.getElementById('current_stock').value = opcion.dataset.cantidad;
+    }
+  });
+</script>
+@endpush

@@ -21,6 +21,8 @@ Antes de traducir el diagrama de clases a migraciones y modelos Eloquent, se rev
 | 13 | Tipos `date` y `Void` en minúscula o mayúscula indistinta | Falta uniformidad en la notación. | `Date` y `void` |
 | 14 | Multiplicidades y nombres escritos como cuadros de texto | No formaban parte del modelo, y en el explorador del proyecto quedaban cinco asociaciones duplicadas (Venta — Venta, Pago — Entrega y repeticiones de Venta — Usuario y Pedido — Venta). | Multiplicidades y nombres registrados en cada asociación; duplicados eliminados |
 | 15 | `Producto.categoria: String` | La categoría se escribía como texto en cada producto: se podían registrar «Tela», «Telas» o «tela» como categorías distintas y no había dónde guardar su descripción. Observación del docente en la revisión del proyecto. | Clase `Categoria` (nombre único y descripción) con la asociación `Categoria 1 — 0..* Producto` |
+| 16 | El diagrama no tenía una clase para la producción | El sistema es para un taller de confecciones y el menú ya tenía el módulo Producción, pero no había dónde registrar las etapas (corte, confección, acabado) por las que pasa un pedido ni quién las realiza. | Clase `Produccion` (etapa, fechas, estado y observación) con `Pedido 1 — 0..* Produccion` «pasa por» y `Usuario 1 — 0..* Produccion` «realiza» |
+| 17 | `generarReporte(): void` | El método arma el texto del reporte que se guarda en `contenido`. | `generarReporte(): String` |
 
 Los atributos `idCliente`, `idVenta`, `idRol`, etc. se conservan en el diagrama. En Laravel todas las tablas usan una sola columna `id`, creada con `$table->id()`, y las claves foráneas se nombran `singular_id`.
 
@@ -42,6 +44,8 @@ Los atributos `idCliente`, `idVenta`, `idRol`, etc. se conservan en el diagrama.
 | Producto «se solicita en» DetallePedido | 0..1 — 0..* | Asociación opcional | `order_details.product_id` (opcional) | `nullOnDelete()` |
 | Producto «se controla en» Inventario | 1 — 0..* | Asociación | `inventories.product_id` | `restrictOnDelete()` |
 | Categoria «clasifica» Producto | 1 — 0..* | Asociación | `products.category_id` | `restrictOnDelete()` |
+| Pedido «pasa por» Produccion | 1 — 0..* | Asociación | `productions.order_id` | `restrictOnDelete()` |
+| Usuario «realiza» Produccion | 1 — 0..* | Asociación | `productions.user_id` | `restrictOnDelete()` |
 
 En DetallePedido el producto es opcional porque un pedido personalizado puede describir una prenda que no está registrada en el catálogo (talla, color y descripción del pedido).
 
@@ -63,6 +67,7 @@ Una tabla es de nivel N cuando todas las tablas a las que apunta son de niveles 
 | Pago | `payments` | `order_id` | `orders` | 3 |
 | Venta | `sales` | `customer_id`, `user_id`, `order_id` | `customers`, `users`, `orders` | 3 |
 | Reporte | `reports` | `user_id` | `users` | 3 |
+| Produccion | `productions` | `order_id`, `user_id` | `orders`, `users` | 3 |
 | DetalleVenta | `detail_sales` | `sale_id`, `product_id` | `sales`, `products` | 4 |
 
 La tabla `users` la crea Laravel y su migración se ejecuta antes que todas. Los atributos propios del diagrama (`role_id` y `dni`) se agregan con una migración de modificación (`--table=users`) que se ejecuta cuando `roles` ya existe. El atributo `nombre` del diagrama corresponde a la columna `name`.

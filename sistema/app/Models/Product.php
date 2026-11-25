@@ -43,4 +43,14 @@ class Product extends Model
     {
         return $cantidad <= (float) $this->quantity;
     }
+
+    // Mueve el stock del producto y de su inventario a la vez (positivo = ingreso, negativo = salida),
+    // así la cantidad del producto y el stock actual del inventario siempre coinciden
+    public function ajustarStock(float $cantidad): void
+    {
+        $this->quantity = round((float) $this->quantity + $cantidad, 2);
+        $this->save();
+
+        $this->inventories()->get()->each(fn ($inventario) => $inventario->actualizarInventario($cantidad));
+    }
 }

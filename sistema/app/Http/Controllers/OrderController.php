@@ -68,7 +68,7 @@ class OrderController extends Controller
     // Ver el pedido con su detalle, pagos y entrega
     public function show(Order $order)
     {
-        $order->load(['customer', 'details.product', 'payments', 'delivery', 'sale']);
+        $order->load(['customer', 'details.product', 'payments', 'delivery', 'sale', 'productions.user']);
         $pagado = (float) $order->payments->sum('amount');
         $saldo = round((float) $order->total - $pagado, 2);
         $estados = Order::ESTADOS;
@@ -136,12 +136,12 @@ class OrderController extends Controller
         return to_route('orders.show', $order)->with('ok', 'Estado del pedido actualizado.');
     }
 
-    // Eliminar pedido (solo si no tiene pagos, entrega ni venta)
+    // Eliminar pedido (solo si no tiene pagos, entrega, venta ni producción)
     public function destroy(Order $order)
     {
-        if ($order->payments()->exists() || $order->delivery()->exists() || $order->sale()->exists()) {
+        if ($order->payments()->exists() || $order->delivery()->exists() || $order->sale()->exists() || $order->productions()->exists()) {
             return to_route('orders.index')
-                ->with('error', 'No se puede eliminar el pedido porque tiene pagos, entrega o venta registrados.');
+                ->with('error', 'No se puede eliminar el pedido porque tiene pagos, entrega, venta o producción registrados.');
         }
 
         // Los detalles se borran solos (cascadeOnDelete en la migración)

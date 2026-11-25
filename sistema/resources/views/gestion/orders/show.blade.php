@@ -23,6 +23,9 @@
         @if ($saldo > 0 && $order->status !== 'entregado')
           <a href="{{ route('payments.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cash-coin me-1"></i> Registrar pago</a>
         @endif
+        @if (in_array($order->status, ['pendiente', 'en_produccion']))
+          <a href="{{ route('productions.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-scissors me-1"></i> Enviar a producción</a>
+        @endif
         @if (! $order->delivery)
           <a href="{{ route('deliveries.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-truck me-1"></i> Programar entrega</a>
         @endif
@@ -108,9 +111,42 @@
           </select>
         </div>
         <div class="col-auto"><button type="submit" class="btn btn-sm btn-primary">Actualizar etapa</button></div>
-        <div class="col-12"><small class="text-muted">El pedido pasa a «Entregado» al confirmar su entrega.</small></div>
+        <div class="col-12"><small class="text-muted">La etapa cambia sola al iniciar y terminar la producción; el pedido pasa a «Entregado» al confirmar su entrega.</small></div>
       </form>
     @endif
+  </div>
+</div>
+
+{{-- Pedido «pasa por» Produccion: avance del pedido en el taller --}}
+<div class="card mb-4">
+  <div class="card-body">
+    <h6 class="text-uppercase small text-muted mb-3">Producción</h6>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="small text-uppercase">Etapa</th>
+            <th class="small text-uppercase">Responsable</th>
+            <th class="small text-uppercase text-center">Inicio</th>
+            <th class="small text-uppercase text-center">Fin</th>
+            <th class="small text-uppercase text-center">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse ($order->productions as $production)
+            <tr>
+              <td>{{ \App\Models\Production::ETAPAS[$production->stage] ?? $production->stage }}</td>
+              <td>{{ $production->user->name }}</td>
+              <td class="text-center">{{ $production->start_date?->format('d/m/Y') ?? '—' }}</td>
+              <td class="text-center">{{ $production->end_date?->format('d/m/Y') ?? '—' }}</td>
+              <td class="text-center">@include('gestion.productions.status-badge', ['status' => $production->status])</td>
+            </tr>
+          @empty
+            <tr><td colspan="5" class="text-muted small">El pedido todavía no se envía a producción.</td></tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

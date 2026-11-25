@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inventory;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class InventoryController extends Controller
 {
@@ -24,10 +25,10 @@ class InventoryController extends Controller
         return view('gestion.inventories.index', compact('inventories'));
     }
 
-    // Formulario para crear
+    // Formulario para crear (solo productos que todavía no tienen inventario)
     public function create()
     {
-        $products = Product::orderBy('name')->get();
+        $products = Product::doesntHave('inventories')->orderBy('name')->get();
 
         return view('gestion.inventories.create', compact('products'));
     }
@@ -35,10 +36,11 @@ class InventoryController extends Controller
     // Guardar nuevo registro de inventario
     public function store(Request $request)
     {
-        $validated = $request->validate($this->reglas());
+        $validated = $request->validate($this->reglas(), $this->mensajes());
         $validated['last_update'] = $validated['last_update'] ?? now();
 
-        Inventory::create($validated);
+        $inventory = Inventory::create($validated);
+        $this->sincronizarProducto($inventory);
 
         return to_route('inventories.index')->with('ok', 'Inventario registrado correctamente.');
     }
@@ -46,7 +48,9 @@ class InventoryController extends Controller
     // Formulario para editar
     public function edit(Inventory $inventory)
     {
-        $products = Product::orderBy('name')->get();
+        $products = Product::where(function ($q) use ($inventory) {
+            $q->doesntHave('inventories')->orWhere('id', $inventory->product_id);
+        })->orderBy('name')->get();
 
         return view('gestion.inventories.edit', compact('inventory', 'products'));
     }
@@ -54,10 +58,11 @@ class InventoryController extends Controller
     // Actualizar inventario
     public function update(Request $request, Inventory $inventory)
     {
-        $validated = $request->validate($this->reglas());
+        $validated = $request->validate($this->reglas($inventory), $this->mensajes());
         $validated['last_update'] = $validated['last_update'] ?? now();
 
         $inventory->update($validated);
+        $this->sincronizarProducto($inventory);
 
         return to_route('inventories.index')->with('ok', 'Inventario actualizado correctamente.');
     }
@@ -70,13 +75,27 @@ class InventoryController extends Controller
         return to_route('inventories.index')->with('ok', 'Registro de inventario eliminado correctamente.');
     }
 
-    private function reglas(): array
+    // El stock actual registrado en el inventario pasa a ser la cantidad del producto
+    private function sincronizarProducto(Inventory $inventory): void
+    {
+        $inventory->product->update(['quantity' => $inventory->current_stock]);
+    }
+
+    private function reglas(?Inventory $inventory = null): array
     {
         return [
-            'product_id' => 'required|exists:products,id',
+            // Cada producto tiene un solo registro de inventario
+            'product_id' => ['required', 'exists:products,id', Rule::unique('inventories')->ignore($inventory?->id)],
             'current_stock' => 'required|numeric|min:0',
             'minimum_stock' => 'required|numeric|min:0',
             'last_update' => 'nullable|date',
+        ];
+    }
+
+    private function mensajes(): array
+    {
+        return [
+            'product_id.unique' => 'Ese producto ya tiene un registro de inventario.',
         ];
     }
 }

@@ -82,8 +82,8 @@ class SaleController extends Controller
                     'subtotal' => round($product->price * $item['quantity'], 2),
                 ]);
 
-                // 3. Descontar el stock
-                $product->decrement('quantity', $item['quantity']);
+                // 3. Descontar el stock del producto y de su inventario
+                $product->ajustarStock(-$item['quantity']);
             }
 
             // 4. Total e IGV con el método del diagrama (el precio ya incluye el 18 % de IGV)
@@ -109,7 +109,7 @@ class SaleController extends Controller
     {
         DB::transaction(function () use ($sale) {
             foreach ($sale->details as $detail) {
-                Product::where('id', $detail->product_id)->increment('quantity', $detail->quantity);
+                Product::lockForUpdate()->find($detail->product_id)->ajustarStock($detail->quantity);
             }
 
             // Los detalles se borran solos (cascadeOnDelete en la migración)

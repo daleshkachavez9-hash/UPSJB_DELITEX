@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Report::class);
     }
+
+    public function productions(): HasMany
+    {
+        return $this->hasMany(Production::class);
+    }
 }

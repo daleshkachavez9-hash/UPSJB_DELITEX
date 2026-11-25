@@ -90,6 +90,11 @@ class ProductController extends Controller
 
         $product->update($validated);
 
+        // Si cambió la cantidad, el inventario del producto queda con el mismo stock
+        if ($product->wasChanged('quantity')) {
+            $product->inventories()->update(['current_stock' => $product->quantity, 'last_update' => now()]);
+        }
+
         return to_route('products.index')->with('ok', 'Producto actualizado correctamente.');
     }
 
