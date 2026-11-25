@@ -14,18 +14,9 @@
   </div>
 
   <div class="col-md-4">
-    <label for="user_id" class="form-label">Generado por</label>
-    <select name="user_id" id="user_id" class="form-select @error('user_id') is-invalid @enderror">
-      <option value="">Seleccione</option>
-      @foreach ($users as $user)
-        <option value="{{ $user->id }}" @selected((string) old('user_id', $report->user_id ?? '') === (string) $user->id)>
-          {{ $user->name }}{{ $user->role ? ' (' . $user->role->name . ')' : '' }}
-        </option>
-      @endforeach
-    </select>
-    @error('user_id')
-      <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
+    {{-- El autor es quien inició sesión al generarlo; al editar se conserva el autor original --}}
+    <label class="form-label">Generado por</label>
+    <input type="text" class="form-control" readonly value="{{ isset($report) ? $report->user->name : auth()->user()->name }}">
   </div>
 
   <div class="col-md-4">

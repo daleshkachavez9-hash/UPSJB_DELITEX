@@ -8,6 +8,58 @@
 @section('module', 'Principal')
 
 @section('content')
+{{-- Resumen con datos reales de la base de datos --}}
+<div class="row g-3 mb-4">
+  <div class="col-12 col-sm-6 col-xl-3">
+    <a href="{{ route('orders.index') }}" class="card stat-card text-decoration-none">
+      <div class="card-body">
+        <span class="stat-icon soft-lavanda"><i class="bi bi-clipboard-check"></i></span>
+        <div>
+          <div class="stat-value">{{ $resumen['pedidos'] }}</div>
+          <div class="stat-label">Pedidos activos</div>
+          <div class="stat-foot text-muted">{{ $resumen['listos'] }} listos para entregar</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-sm-6 col-xl-3">
+    <a href="{{ route('productions.index') }}" class="card stat-card text-decoration-none">
+      <div class="card-body">
+        <span class="stat-icon soft-azul"><i class="bi bi-scissors"></i></span>
+        <div>
+          <div class="stat-value">{{ $resumen['produccion'] }}</div>
+          <div class="stat-label">Trabajos en producción</div>
+          <div class="stat-foot text-muted">{{ $resumen['porIniciar'] }} por iniciar</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-sm-6 col-xl-3">
+    <a href="{{ route('inventories.index', ['alerts' => 1]) }}" class="card stat-card text-decoration-none">
+      <div class="card-body">
+        <span class="stat-icon soft-amarillo"><i class="bi bi-box-seam"></i></span>
+        <div>
+          <div class="stat-value">{{ $resumen['stockBajo'] }}</div>
+          <div class="stat-label">Productos con stock bajo</div>
+          <div class="stat-foot {{ $resumen['stockBajo'] ? 'text-danger' : 'text-muted' }}">{{ $resumen['stockBajo'] ? 'Revisar alertas de stock' : 'Todo en orden' }}</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-sm-6 col-xl-3">
+    <a href="{{ route('payments.index') }}" class="card stat-card text-decoration-none">
+      <div class="card-body">
+        <span class="stat-icon soft-rosa"><i class="bi bi-cash-coin"></i></span>
+        <div>
+          <div class="stat-value">S/ {{ number_format($resumen['porCobrar'], 2) }}</div>
+          <div class="stat-label">Saldo por cobrar</div>
+          <div class="stat-foot text-muted">De pedidos no entregados</div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
 <div class="section-bar">
   <h3>Menú principal</h3>
 </div>

@@ -23,6 +23,7 @@ Antes de traducir el diagrama de clases a migraciones y modelos Eloquent, se rev
 | 15 | `Producto.categoria: String` | La categoría se escribía como texto en cada producto: se podían registrar «Tela», «Telas» o «tela» como categorías distintas y no había dónde guardar su descripción. Observación del docente en la revisión del proyecto. | Clase `Categoria` (nombre único y descripción) con la asociación `Categoria 1 — 0..* Producto` |
 | 16 | El diagrama no tenía una clase para la producción | El sistema es para un taller de confecciones y el menú ya tenía el módulo Producción, pero no había dónde registrar las etapas (corte, confección, acabado) por las que pasa un pedido ni quién las realiza. | Clase `Produccion` (etapa, fechas, estado y observación) con `Pedido 1 — 0..* Produccion` «pasa por» y `Usuario 1 — 0..* Produccion` «realiza» |
 | 17 | `generarReporte(): void` | El método arma el texto del reporte que se guarda en `contenido`. | `generarReporte(): String` |
+| 18 | `Producto 1 — 0..* DetalleVenta` | Cuando un pedido entregado origina su venta (comprobante), sus prendas pasan al detalle de la venta, y una prenda personalizada no está en el catálogo. Con multiplicidad 1 no se podía registrar. | `Producto 0..1 — 0..* DetalleVenta`, igual que en DetallePedido |
 
 Los atributos `idCliente`, `idVenta`, `idRol`, etc. se conservan en el diagrama. En Laravel todas las tablas usan una sola columna `id`, creada con `$table->id()`, y las claves foráneas se nombran `singular_id`.
 
@@ -40,14 +41,14 @@ Los atributos `idCliente`, `idVenta`, `idRol`, etc. se conservan en el diagrama.
 | Pedido «entrega» Entrega | 1 — 0..1 | Asociación 1 — 1 | `deliveries.order_id` (única) | `restrictOnDelete()` |
 | Pedido «origina» Venta | 1 — 0..1 | Asociación opcional | `sales.order_id` (única, opcional) | `nullOnDelete()` |
 | Venta «contiene» DetalleVenta | 1 ◆— 1..* | Composición | `detail_sales.sale_id` | `cascadeOnDelete()` |
-| Producto «se vende en» DetalleVenta | 1 — 0..* | Asociación | `detail_sales.product_id` | `restrictOnDelete()` |
+| Producto «se vende en» DetalleVenta | 0..1 — 0..* | Asociación opcional | `detail_sales.product_id` (opcional) | `restrictOnDelete()` |
 | Producto «se solicita en» DetallePedido | 0..1 — 0..* | Asociación opcional | `order_details.product_id` (opcional) | `nullOnDelete()` |
 | Producto «se controla en» Inventario | 1 — 0..* | Asociación | `inventories.product_id` | `restrictOnDelete()` |
 | Categoria «clasifica» Producto | 1 — 0..* | Asociación | `products.category_id` | `restrictOnDelete()` |
 | Pedido «pasa por» Produccion | 1 — 0..* | Asociación | `productions.order_id` | `restrictOnDelete()` |
 | Usuario «realiza» Produccion | 1 — 0..* | Asociación | `productions.user_id` | `restrictOnDelete()` |
 
-En DetallePedido el producto es opcional porque un pedido personalizado puede describir una prenda que no está registrada en el catálogo (talla, color y descripción del pedido).
+En DetallePedido el producto es opcional porque un pedido personalizado puede describir una prenda que no está registrada en el catálogo (talla, color y descripción del pedido). Por la misma razón también es opcional en DetalleVenta: la venta que origina un pedido copia sus prendas. Las ventas directas siempre llevan un producto del catálogo, porque descuentan su stock.
 
 ## 3. Orden de creación de las tablas por niveles
 

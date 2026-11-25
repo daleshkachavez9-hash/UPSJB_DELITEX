@@ -10165,7 +10165,7 @@
 								"reference": {
 									"$ref": "AAAAAAGhZHzcVoBOOhg="
 								},
-								"multiplicity": "1"
+								"multiplicity": "0..1"
 							},
 							"end2": {
 								"_type": "UMLAssociationEnd",

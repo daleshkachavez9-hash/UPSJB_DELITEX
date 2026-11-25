@@ -34,8 +34,9 @@ class DetailSale extends Model
         return round($this->quantity * $this->unit_price, 2);
     }
 
+    // Una prenda personalizada (sin producto del catálogo) no usa stock
     public function validarStock(): bool
     {
-        return $this->product->verificarStock($this->quantity);
+        return $this->product?->verificarStock($this->quantity) ?? true;
     }
 }

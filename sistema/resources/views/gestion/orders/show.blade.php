@@ -26,6 +26,14 @@
         @if (in_array($order->status, ['pendiente', 'en_produccion']))
           <a href="{{ route('productions.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-scissors me-1"></i> Enviar a producción</a>
         @endif
+        @if ($order->status === 'entregado' && ! $order->sale)
+          {{-- Pedido «origina» Venta: comprobante del pedido ya pagado y entregado --}}
+          <form action="{{ route('orders.sale', $order) }}" method="POST" class="d-inline"
+                onsubmit="return confirm('¿Generar la venta (comprobante) de este pedido?');">
+            @csrf
+            <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-receipt me-1"></i> Generar venta</button>
+          </form>
+        @endif
         @if (! $order->delivery)
           <a href="{{ route('deliveries.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-truck me-1"></i> Programar entrega</a>
         @endif

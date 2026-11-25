@@ -34,7 +34,8 @@ class ReportController extends Controller
     // Guardar el reporte; si el contenido llega vacío lo arma generarReporte()
     public function store(Request $request)
     {
-        $report = new Report($this->validar($request));
+        // Usuario «genera» Reporte: el autor es quien inició sesión
+        $report = new Report($this->validar($request) + ['user_id' => $request->user()->id]);
         $this->completarContenido($report);
         $report->save();
 
@@ -77,19 +78,15 @@ class ReportController extends Controller
     {
         return [
             'tipos' => Report::TIPOS,
-            'users' => User::with('role')->orderBy('name')->get(),
         ];
     }
 
     private function validar(Request $request): array
     {
         return $request->validate([
-            'user_id' => 'required|exists:users,id',
             'type' => ['required', Rule::in(Report::TIPOS)],
             'generated_date' => 'required|date',
             'content' => 'nullable|max:5000',
-        ], [], [
-            'user_id' => 'usuario',
         ]);
     }
 

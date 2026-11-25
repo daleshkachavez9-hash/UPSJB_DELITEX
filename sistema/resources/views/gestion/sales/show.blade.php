@@ -37,9 +37,16 @@
       </div>
       <div class="col-12 col-md-4 mb-2">
         <small class="text-muted d-block">Pedido</small>
-        <span class="fw-semibold">{{ $sale->order ? 'Nº ' . str_pad($sale->order->id, 6, '0', STR_PAD_LEFT) : 'Venta directa' }}</span>
+        @if ($sale->order)
+          <a href="{{ route('orders.show', $sale->order) }}" class="fw-semibold">Nº {{ str_pad($sale->order->id, 6, '0', STR_PAD_LEFT) }}</a>
+        @else
+          <span class="fw-semibold">Venta directa</span>
+        @endif
       </div>
     </div>
+    @if ($sale->order)
+      <p class="small text-muted"><i class="bi bi-info-circle me-1"></i>Comprobante del pedido: el monto se cobró con los pagos del pedido y las prendas salieron del taller, por eso no se descontó stock.</p>
+    @endif
 
     <div class="table-responsive">
       <table class="table table-sm align-middle">
@@ -56,7 +63,7 @@
           @foreach ($sale->details as $detail)
             <tr>
               <td class="text-center">{{ $loop->iteration }}</td>
-              <td>{{ $detail->product->name }}</td>
+              <td>{{ $detail->product->name ?? 'Prenda personalizada' }}</td>
               <td class="text-center">{{ $detail->quantity }}</td>
               <td class="text-end">S/ {{ number_format($detail->unit_price, 2) }}</td>
               <td class="text-end">S/ {{ number_format($detail->subtotal, 2) }}</td>
