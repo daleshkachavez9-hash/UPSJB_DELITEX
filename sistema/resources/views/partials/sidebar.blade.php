@@ -5,6 +5,7 @@
     <span class="brand-sub">Confecciones deportivas</span>
   </a>
 
+  {{-- Cada enlace aparece solo si el rol del usuario tiene permitido ese módulo --}}
   <nav class="sidebar-nav">
     <p class="nav-section">Principal</p>
     <a href="{{ route('dashboard.index') }}"
@@ -12,77 +13,108 @@
        aria-current="{{ request()->is('/') ? 'page' : null }}">
       <i class="bi bi-grid-1x2"></i> Dashboard
     </a>
-    <a href="{{ route('reports.index') }}"
-       class="sidebar-link {{ request()->is(['reports*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['reports*']) ? 'page' : null }}">
-      <i class="bi bi-file-earmark-bar-graph"></i> Reportes
-    </a>
+    @can('modulo', 'reportes')
+      <a href="{{ route('reports.index') }}"
+         class="sidebar-link {{ request()->is(['reports*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['reports*']) ? 'page' : null }}">
+        <i class="bi bi-file-earmark-bar-graph"></i> Reportes
+      </a>
+    @endcan
 
     <p class="nav-section">Gestión</p>
-    <a href="{{ route('customers.index') }}"
-       class="sidebar-link {{ request()->is(['customers*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['customers*']) ? 'page' : null }}">
-      <i class="bi bi-people"></i> Clientes
-    </a>
-    <a href="{{ route('orders.index') }}"
-       class="sidebar-link {{ request()->is(['orders*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['orders*']) ? 'page' : null }}">
-      <i class="bi bi-clipboard-check"></i> Pedidos
-    </a>
-    <a href="{{ route('sales.index') }}"
-       class="sidebar-link {{ request()->is(['sales*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['sales*']) ? 'page' : null }}">
-      <i class="bi bi-cart3"></i> Ventas
-    </a>
-    {{-- El seguimiento se hace desde el listado de pedidos (búsqueda por Nº o DNI) y su detalle --}}
-    <a href="{{ route('orders.index') }}" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
-    <a href="{{ route('productions.index') }}"
-       class="sidebar-link {{ request()->is(['productions*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['productions*']) ? 'page' : null }}">
-      <i class="bi bi-scissors"></i> Producción
-    </a>
-    <a href="{{ route('products.index') }}"
-       class="sidebar-link {{ request()->is(['products*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['products*']) ? 'page' : null }}">
-      <i class="bi bi-boxes"></i> Productos
-    </a>
-    <a href="{{ route('inventories.index') }}"
-       class="sidebar-link {{ request()->is(['inventories*']) && !request()->boolean('alerts') ? 'active' : null }}"
-       aria-current="{{ request()->is(['inventories*']) && !request()->boolean('alerts') ? 'page' : null }}">
-      <i class="bi bi-box-seam"></i> Inventario
-    </a>
-    <a href="{{ route('inventories.index', ['alerts' => 1]) }}"
-       class="sidebar-link {{ request()->is(['inventories']) && request()->boolean('alerts') ? 'active' : null }}"
-       aria-current="{{ request()->is(['inventories']) && request()->boolean('alerts') ? 'page' : null }}">
-      <i class="bi bi-exclamation-triangle"></i> Alertas de stock
-    </a>
-    <a href="{{ route('payments.index') }}"
-       class="sidebar-link {{ request()->is(['payments*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['payments*']) ? 'page' : null }}">
-      <i class="bi bi-cash-coin"></i> Pagos
-    </a>
-    <a href="{{ route('deliveries.index') }}"
-       class="sidebar-link {{ request()->is(['deliveries*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['deliveries*']) ? 'page' : null }}">
-      <i class="bi bi-truck"></i> Entregas
-    </a>
+    @can('modulo', 'clientes')
+      <a href="{{ route('customers.index') }}"
+         class="sidebar-link {{ request()->is(['customers*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['customers*']) ? 'page' : null }}">
+        <i class="bi bi-people"></i> Clientes
+      </a>
+    @endcan
+    {{-- Quien registra pedidos ve "Pedidos"; quien solo los consulta ve "Seguimiento de pedidos" (búsqueda por Nº, DNI o RUC) --}}
+    @can('modulo', 'pedidos')
+      <a href="{{ route('orders.index') }}"
+         class="sidebar-link {{ request()->is(['orders*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['orders*']) ? 'page' : null }}">
+        <i class="bi bi-clipboard-check"></i> Pedidos
+      </a>
+    @elsecan('modulo', 'seguimiento')
+      <a href="{{ route('orders.index') }}"
+         class="sidebar-link {{ request()->is(['orders*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['orders*']) ? 'page' : null }}">
+        <i class="bi bi-signpost-split"></i> Seguimiento de pedidos
+      </a>
+    @endcan
+    @can('modulo', 'ventas')
+      <a href="{{ route('sales.index') }}"
+         class="sidebar-link {{ request()->is(['sales*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['sales*']) ? 'page' : null }}">
+        <i class="bi bi-cart3"></i> Ventas
+      </a>
+    @endcan
+    @can('modulo', 'produccion')
+      <a href="{{ route('productions.index') }}"
+         class="sidebar-link {{ request()->is(['productions*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['productions*']) ? 'page' : null }}">
+        <i class="bi bi-scissors"></i> Producción
+      </a>
+    @endcan
+    @can('modulo', 'productos')
+      <a href="{{ route('products.index') }}"
+         class="sidebar-link {{ request()->is(['products*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['products*']) ? 'page' : null }}">
+        <i class="bi bi-boxes"></i> Productos
+      </a>
+    @endcan
+    @can('modulo', 'inventario')
+      <a href="{{ route('inventories.index') }}"
+         class="sidebar-link {{ request()->is(['inventories*']) && !request()->boolean('alerts') ? 'active' : null }}"
+         aria-current="{{ request()->is(['inventories*']) && !request()->boolean('alerts') ? 'page' : null }}">
+        <i class="bi bi-box-seam"></i> Inventario
+      </a>
+      <a href="{{ route('inventories.index', ['alerts' => 1]) }}"
+         class="sidebar-link {{ request()->is(['inventories']) && request()->boolean('alerts') ? 'active' : null }}"
+         aria-current="{{ request()->is(['inventories']) && request()->boolean('alerts') ? 'page' : null }}">
+        <i class="bi bi-exclamation-triangle"></i> Alertas de stock
+      </a>
+    @endcan
+    @can('modulo', 'pagos')
+      <a href="{{ route('payments.index') }}"
+         class="sidebar-link {{ request()->is(['payments*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['payments*']) ? 'page' : null }}">
+        <i class="bi bi-cash-coin"></i> Pagos
+      </a>
+    @endcan
+    @can('modulo', 'entregas')
+      <a href="{{ route('deliveries.index') }}"
+         class="sidebar-link {{ request()->is(['deliveries*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['deliveries*']) ? 'page' : null }}">
+        <i class="bi bi-truck"></i> Entregas
+      </a>
+    @endcan
 
-    <p class="nav-section">Configuraciones</p>
-    <a href="{{ route('roles.index') }}"
-       class="sidebar-link {{ request()->is(['roles*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['roles*']) ? 'page' : null }}">
-      <i class="bi bi-shield-check"></i> Roles
-    </a>
-    <a href="{{ route('users.index') }}"
-       class="sidebar-link {{ request()->is(['users*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['users*']) ? 'page' : null }}">
-      <i class="bi bi-person-gear"></i> Usuarios
-    </a>
-    <a href="{{ route('categories.index') }}"
-       class="sidebar-link {{ request()->is(['categories*']) ? 'active' : null }}"
-       aria-current="{{ request()->is(['categories*']) ? 'page' : null }}">
-      <i class="bi bi-tags"></i> Categorías
-    </a>
+    @if (auth()->user()->puede('roles') || auth()->user()->puede('usuarios') || auth()->user()->puede('categorias'))
+      <p class="nav-section">Configuraciones</p>
+    @endif
+    @can('modulo', 'roles')
+      <a href="{{ route('roles.index') }}"
+         class="sidebar-link {{ request()->is(['roles*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['roles*']) ? 'page' : null }}">
+        <i class="bi bi-shield-check"></i> Roles
+      </a>
+    @endcan
+    @can('modulo', 'usuarios')
+      <a href="{{ route('users.index') }}"
+         class="sidebar-link {{ request()->is(['users*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['users*']) ? 'page' : null }}">
+        <i class="bi bi-person-gear"></i> Usuarios
+      </a>
+    @endcan
+    @can('modulo', 'categorias')
+      <a href="{{ route('categories.index') }}"
+         class="sidebar-link {{ request()->is(['categories*']) ? 'active' : null }}"
+         aria-current="{{ request()->is(['categories*']) ? 'page' : null }}">
+        <i class="bi bi-tags"></i> Categorías
+      </a>
+    @endcan
   </nav>
 
   <div class="sidebar-user dropup">

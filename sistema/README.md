@@ -56,7 +56,19 @@ Todo el sistema pide iniciar sesión. Se ingresa con el correo o el DNI y la con
 
 Flujo de un pedido personalizado: se registra el pedido → se envía a producción y avanza por etapas (corte, confección, estampado o bordado, acabado y control de calidad) → se registran los pagos → se confirma la entrega cuando está pagado → se genera su venta (comprobante), sin volver a cobrar.
 
-Las ventas directas de productos del catálogo se registran en Ventas y descuentan el stock del producto y de su inventario.
+Las ventas directas de prendas del catálogo se registran en Ventas y descuentan el stock del producto y de su inventario. Los insumos (telas, hilos, accesorios) son de uso del taller y no se venden.
+
+## Permisos por rol
+
+Cada rol tiene marcados los módulos a los que puede entrar (Configuraciones → Roles). El menú y el dashboard muestran solo esos módulos, y si alguien escribe la dirección de otro, el sistema responde «Sin permiso».
+
+| Rol | Módulos |
+|---|---|
+| Dueña | Todos |
+| Administradora | Todos menos Roles |
+| Confeccionista | Seguimiento de pedidos (solo consulta), Producción, Productos e Inventario |
+
+Un usuario solo puede asignar roles con los mismos permisos que el suyo o menos, no puede cambiar su propio rol ni eliminarse, y nadie puede quitarle a su propio rol el acceso a Roles.
 
 Después de cada Pull, si hay migraciones nuevas, se ejecuta `php artisan migrate` (o `php artisan migrate:fresh --seed` para reconstruir la base desde cero).
 

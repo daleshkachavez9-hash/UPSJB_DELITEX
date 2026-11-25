@@ -31,6 +31,7 @@
             <th class="text-center">Nº</th>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Módulos permitidos</th>
             <th class="text-center">Usuarios</th>
             <th class="text-end">Acciones</th>
           </tr>
@@ -41,6 +42,7 @@
               <td class="text-center">{{ $loop->iteration }}</td>
               <td>{{ $role->name }}</td>
               <td>{{ $role->description ?? '—' }}</td>
+              <td class="small">{{ count($role->modules ?? []) === count(\App\Models\Role::MODULOS) ? 'Todos' : collect($role->modules ?? [])->map(fn ($m) => \App\Models\Role::MODULOS[$m] ?? $m)->implode(', ') }}</td>
               <td class="text-center">{{ $role->users_count }}</td>
               <td class="text-end">
                 <div class="dropdown">
@@ -69,7 +71,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="5" class="text-center text-muted py-4">No hay roles registrados.</td>
+              <td colspan="6" class="text-center text-muted py-4">No hay roles registrados.</td>
             </tr>
           @endforelse
         </tbody>

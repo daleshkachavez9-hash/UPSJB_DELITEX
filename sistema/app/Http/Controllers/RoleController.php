@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class RoleController extends Controller
 {
@@ -22,13 +23,10 @@ class RoleController extends Controller
         return view('settings.roles.create');
     }
 
-    // Guardar nuevo rol
+    // Guardar nuevo rol con sus módulos permitidos
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:50|unique:roles',
-            'description' => 'nullable|max:255',
-        ]);
+        $validated = $request->validate($this->reglas(), $this->mensajes());
 
         Role::create($validated);
 
@@ -44,11 +42,14 @@ class RoleController extends Controller
     // Actualizar rol
     public function update(Request $request, Role $role)
     {
-        $validated = $request->validate([
-            // ignore(): el nombre no se repite, sin contar el rol que se está editando
-            'name' => ['required', 'max:50', Rule::unique('roles')->ignore($role->id)],
-            'description' => 'nullable|max:255',
-        ]);
+        $validated = $request->validate($this->reglas($role), $this->mensajes());
+
+        // Nadie puede quitarle a su propio rol el acceso a Roles: se quedaría sin poder corregirlo
+        if ($request->user()->role_id === $role->id && ! in_array('roles', $validated['modules'], true)) {
+            throw ValidationException::withMessages([
+                'modules' => 'No puedes quitarle a tu propio rol el acceso a Roles.',
+            ]);
+        }
 
         $role->update($validated);
 
@@ -66,5 +67,23 @@ class RoleController extends Controller
         $role->delete();
 
         return to_route('roles.index')->with('ok', 'Rol eliminado correctamente.');
+    }
+
+    private function reglas(?Role $role = null): array
+    {
+        return [
+            // ignore(): el nombre no se repite, sin contar el rol que se está editando
+            'name' => ['required', 'max:50', Rule::unique('roles')->ignore($role?->id)],
+            'description' => 'nullable|max:255',
+            'modules' => 'required|array|min:1',
+            'modules.*' => [Rule::in(array_keys(Role::MODULOS))],
+        ];
+    }
+
+    private function mensajes(): array
+    {
+        return [
+            'modules.required' => 'Marca al menos un módulo para el rol.',
+        ];
     }
 }
