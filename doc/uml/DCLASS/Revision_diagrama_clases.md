@@ -29,6 +29,8 @@ Antes de traducir el diagrama de clases a migraciones y modelos Eloquent, se rev
 | 21 | `Categoria` sin tipo | DELITEX confecciona y vende prendas; las telas, hilos y accesorios son insumos del taller y no se venden. No había cómo distinguirlos. | `Categoria.tipo: String` (prenda o insumo): ventas y pedidos solo ofrecen prendas |
 | 22 | `Rol` sin permisos | Todos los usuarios entraban a todos los módulos, por ejemplo una confeccionista podía eliminar usuarios. El prototipo ya definía qué módulos ve cada rol. | `Rol.modulos: String[]` y `permite(): bool` |
 | 23 | `Pago.estado` con valores parcial / completo guardados una sola vez | Si se anulaba un pago, el estado de los otros quedaba desactualizado. | El estado es `adelanto` o `cancelacion` y se vuelve a calcular con `Pedido.actualizarEstadoPagos()` al registrar o anular un pago y al cambiar el total |
+| 24 | DetallePedido solo con talla, color, cantidad y precio | El taller necesita saber qué prenda confeccionar, en qué tela y con qué estampado; el prototipo ya generaba una ficha de producción con esos datos y un dibujo de cada prenda. | `DetallePedido` con `tipoPrenda`, `tela`, `estampado`, `detalleEstampado` y `observacion` |
+| 25 | Pedido sin imagen | El cliente suele enviar su logo, escudo o diseño, y el taller lo necesita a la vista. | `Pedido.imagenReferencia: String` (ruta de la imagen en el disco public, como la imagen del producto) |
 
 Los atributos `idCliente`, `idVenta`, `idRol`, etc. se conservan en el diagrama. En Laravel todas las tablas usan una sola columna `id`, creada con `$table->id()`, y las claves foráneas se nombran `singular_id`.
 
@@ -88,3 +90,4 @@ La tabla `categories` se agregó después de las demás. Como `products` apunta 
 - El stock bajo se decide con el stock mínimo de cada inventario (`generarAlerta()`), tanto en Productos como en las alertas.
 - Las fechas del pedido y del pago no pueden ser futuras, y un pago no puede ser anterior a su pedido.
 - Cada usuario entra solo a los módulos de su rol, solo puede asignar roles con los mismos permisos que el suyo o menos, no puede cambiar su propio rol ni eliminarse, y nadie puede quitarle a su propio rol el acceso a Roles.
+- La ficha de producción de cada pedido junta las filas de la misma prenda (tipo, color, tela y estampado) en un cuadro de tallas, dibuja cada prenda con el color de su tela y muestra la imagen de referencia. Se imprime o se guarda en PDF desde el navegador.
