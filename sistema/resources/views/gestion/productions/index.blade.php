@@ -98,6 +98,11 @@
                         <a class="dropdown-item" href="{{ route('orders.show', $production->order) }}"><i class="bi bi-eye"></i> Ver pedido</a>
                       </li>
                     @endcan
+                    @can('modulo', 'seguimiento')
+                      <li>
+                        <a class="dropdown-item" href="{{ route('orders.ficha', $production->order) }}" target="_blank"><i class="bi bi-file-earmark-text"></i> Ficha de producción</a>
+                      </li>
+                    @endcan
                     @if ($production->status === 'pendiente')
                       <li>
                         {{-- Método del diagrama: iniciarProduccion() --}}

@@ -54,7 +54,7 @@ Todo el sistema pide iniciar sesión. Se ingresa con el correo o el DNI y la con
 | Gestión | Clientes, Pedidos (con su seguimiento), Ventas, Producción, Productos, Inventario y alertas de stock, Pagos y Entregas |
 | Configuraciones | Roles, Usuarios, Categorías y Mi perfil |
 
-Flujo de un pedido personalizado: se registra el pedido → se envía a producción y avanza por etapas (corte, confección, estampado o bordado, acabado y control de calidad) → se registran los pagos → se confirma la entrega cuando está pagado → se genera su venta (comprobante), sin volver a cobrar.
+Flujo de un pedido personalizado: se registra el pedido con sus prendas (tipo, talla, color, tela y estampado) y, si el cliente la envía, una imagen de referencia → se imprime su **Ficha de producción** para el taller → se envía a producción y avanza por etapas (corte, confección, estampado o bordado, acabado y control de calidad) → se registran los pagos → se confirma la entrega cuando está pagado → se genera su venta (comprobante), sin volver a cobrar.
 
 Las ventas directas de prendas del catálogo se registran en Ventas y descuentan el stock del producto y de su inventario. Los insumos (telas, hilos, accesorios) son de uso del taller y no se venden.
 

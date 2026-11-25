@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['customer_id', 'order_date', 'status', 'total', 'description'])]
+#[Fillable(['customer_id', 'order_date', 'status', 'total', 'description', 'reference_image'])]
 class Order extends Model
 {
     // Etapas por las que pasa un pedido personalizado

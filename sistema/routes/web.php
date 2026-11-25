@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function () {
     // (va primero para que /orders/create no se confunda con el detalle /orders/{order})
     Route::resource('orders', OrderController::class)->except(['index', 'show'])->middleware('can:modulo,"pedidos"');
     Route::resource('orders', OrderController::class)->only(['index', 'show'])->middleware('can:modulo,"seguimiento"');
+    // Ficha de producción: la usa el taller, por eso basta con poder consultar pedidos
+    Route::get('orders/{order}/ficha', [OrderController::class, 'ficha'])->name('orders.ficha')->middleware('can:modulo,"seguimiento"');
 
     // Un pago es un recibo: se registra y, si hubo un error, se anula
     Route::resource('payments', PaymentController::class)->only(['index', 'create', 'store', 'destroy'])->middleware('can:modulo,"pagos"');

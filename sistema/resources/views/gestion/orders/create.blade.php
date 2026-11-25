@@ -11,7 +11,7 @@
 @section('content')
 <div class="card">
   <div class="card-body">
-    <form action="{{ route('orders.store') }}" method="POST">
+    <form action="{{ route('orders.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       @include('gestion.orders.form')
     </form>
