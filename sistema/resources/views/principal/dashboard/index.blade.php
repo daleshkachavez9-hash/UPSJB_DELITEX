@@ -32,7 +32,7 @@
     <span class="tile-title">Seguimiento</span>
     <span class="tile-sub">Estado de cada pedido</span>
   </a>
-  <a class="module-tile" href="#">
+  <a class="module-tile" href="{{ route('productions.index') }}">
     <span class="tile-icon soft-amarillo"><i class="bi bi-scissors"></i></span>
     <span class="tile-title">Producción</span>
     <span class="tile-sub">Órdenes de trabajo y etapas</span>

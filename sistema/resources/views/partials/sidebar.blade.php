@@ -36,7 +36,11 @@
     </a>
     {{-- El seguimiento se hace desde el listado de pedidos (búsqueda por Nº o DNI) y su detalle --}}
     <a href="{{ route('orders.index') }}" class="sidebar-link"><i class="bi bi-signpost-split"></i> Seguimiento de pedidos</a>
-    <a href="#" class="sidebar-link"><i class="bi bi-scissors"></i> Producción</a>
+    <a href="{{ route('productions.index') }}"
+       class="sidebar-link {{ request()->is(['productions*']) ? 'active' : null }}"
+       aria-current="{{ request()->is(['productions*']) ? 'page' : null }}">
+      <i class="bi bi-scissors"></i> Producción
+    </a>
     <a href="{{ route('products.index') }}"
        class="sidebar-link {{ request()->is(['products*']) ? 'active' : null }}"
        aria-current="{{ request()->is(['products*']) ? 'page' : null }}">

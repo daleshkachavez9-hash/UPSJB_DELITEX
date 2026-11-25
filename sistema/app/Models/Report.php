@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class Report extends Model
 {
     // Tipos de reporte que puede generar el sistema
-    const TIPOS = ['Ventas', 'Pedidos', 'Pagos', 'Inventario'];
+    const TIPOS = ['Ventas', 'Pedidos', 'Pagos', 'Inventario', 'Producción'];
 
     protected function casts(): array
     {
@@ -39,6 +39,7 @@ class Report extends Model
             'Pedidos' => $this->resumenPedidos($inicio, $fin, $periodo, $soles),
             'Pagos' => $this->resumenPagos($inicio, $fin, $periodo, $soles),
             'Inventario' => $this->resumenInventario($fecha),
+            'Producción' => $this->resumenProduccion($inicio, $fin, $periodo),
             default => [],
         };
 
@@ -117,6 +118,37 @@ class Report extends Model
             ->sum(fn ($o) => max(0, (float) $o->total - (float) $o->payments_sum_amount));
         $lineas[] = '';
         $lineas[] = 'Saldo pendiente de cobro (pedidos no entregados): ' . $soles($pendiente);
+
+        return $lineas;
+    }
+
+    private function resumenProduccion($inicio, $fin, $periodo): array
+    {
+        $terminadas = Production::where('status', 'terminado')->whereBetween('end_date', [$inicio, $fin]);
+        $lineas = [
+            "Reporte de producción - $periodo",
+            'Trabajos terminados en el mes: ' . (clone $terminadas)->count(),
+            'Trabajos en proceso: ' . Production::where('status', 'en_proceso')->count(),
+            'Trabajos por iniciar: ' . Production::where('status', 'pendiente')->count(),
+            '',
+            'En proceso por etapa:',
+        ];
+
+        $porEtapa = Production::where('status', 'en_proceso')->selectRaw('stage, COUNT(*) as cantidad')->groupBy('stage')->pluck('cantidad', 'stage');
+        foreach (Production::ETAPAS as $valor => $texto) {
+            $lineas[] = "- $texto: " . ($porEtapa[$valor] ?? 0);
+        }
+
+        $porResponsable = (clone $terminadas)->join('users', 'users.id', '=', 'productions.user_id')
+            ->groupBy('users.name')->orderByDesc('cantidad')
+            ->get(['users.name', DB::raw('COUNT(*) as cantidad')]);
+        if ($porResponsable->isNotEmpty()) {
+            $lineas[] = '';
+            $lineas[] = 'Terminados por responsable:';
+            foreach ($porResponsable as $r) {
+                $lineas[] = "- {$r->name}: {$r->cantidad}";
+            }
+        }
 
         return $lineas;
     }

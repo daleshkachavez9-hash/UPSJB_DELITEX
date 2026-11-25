@@ -8,6 +8,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
@@ -30,6 +31,11 @@ Route::resource('orders', OrderController::class);
 Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
 // Un pago es un recibo: se registra y, si hubo un error, se anula
 Route::resource('payments', PaymentController::class)->only(['index', 'create', 'store', 'destroy']);
+// Producción: el trabajo se inicia, avanza de etapa y se termina con los métodos del diagrama
+Route::resource('productions', ProductionController::class)->except('show');
+Route::patch('productions/{production}/start', [ProductionController::class, 'start'])->name('productions.start');
+Route::patch('productions/{production}/advance', [ProductionController::class, 'advance'])->name('productions.advance');
+Route::patch('productions/{production}/finish', [ProductionController::class, 'finish'])->name('productions.finish');
 // La entrega se programa y luego se confirma con confirmarEntrega()
 Route::resource('deliveries', DeliveryController::class)->except('show');
 Route::patch('deliveries/{delivery}/confirm', [DeliveryController::class, 'confirm'])->name('deliveries.confirm');

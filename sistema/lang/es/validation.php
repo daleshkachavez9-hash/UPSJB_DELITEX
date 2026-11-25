@@ -6,6 +6,7 @@
 
 return [
     'array' => 'El campo :attribute debe ser una lista.',
+    'before_or_equal' => 'El campo :attribute debe ser una fecha anterior o igual a hoy.',
     'boolean' => 'El campo :attribute debe ser verdadero o falso.',
     'confirmed' => 'La confirmación de :attribute no coincide.',
     'date' => 'El campo :attribute debe ser una fecha válida.',
@@ -66,6 +67,8 @@ return [
         'payment_type' => 'tipo de pago',
         'delivery_date' => 'fecha de entrega',
         'observation' => 'observación',
+        'stage' => 'etapa',
+        'start_date' => 'fecha de inicio',
         'type' => 'tipo',
         'generated_date' => 'fecha de generación',
         'content' => 'contenido',

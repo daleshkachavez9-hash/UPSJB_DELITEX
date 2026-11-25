@@ -52,6 +52,11 @@ class Order extends Model
         return $this->hasOne(Sale::class);
     }
 
+    public function productions(): HasMany
+    {
+        return $this->hasMany(Production::class);
+    }
+
     // Métodos del diagrama
     public function calcularTotal(): float
     {

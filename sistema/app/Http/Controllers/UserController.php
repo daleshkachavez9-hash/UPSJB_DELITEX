@@ -73,9 +73,9 @@ class UserController extends Controller
     // Eliminar usuario (solo si no tiene ventas ni reportes)
     public function destroy(User $user)
     {
-        if ($user->sales()->exists() || $user->reports()->exists()) {
+        if ($user->sales()->exists() || $user->reports()->exists() || $user->productions()->exists()) {
             return to_route('users.index')
-                ->with('error', 'No se puede eliminar el usuario porque tiene ventas o reportes registrados.');
+                ->with('error', 'No se puede eliminar el usuario porque tiene ventas, reportes o trabajos de producción registrados.');
         }
 
         $user->delete();
