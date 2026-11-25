@@ -89,8 +89,9 @@
               <td>{{ $product->garment_type }}</td>
               <td class="text-end">S/ {{ number_format($product->price, 2) }}</td>
               <td class="text-center">
-                {{-- En rojo si el stock está bajo --}}
-                <span class="badge {{ $product->quantity <= $lowStock ? 'bg-danger' : 'bg-success' }}">
+                {{-- En rojo si está en el stock mínimo de su inventario o por debajo (generarAlerta) --}}
+                <span class="badge {{ $product->inventory?->generarAlerta() ? 'bg-danger' : 'bg-success' }}"
+                      title="{{ $product->inventory ? 'Stock mínimo: ' . rtrim(rtrim($product->inventory->minimum_stock, '0'), '.') : 'Sin registro de inventario' }}">
                   {{ rtrim(rtrim($product->quantity, '0'), '.') }} {{ $product->unit }}
                 </span>
               </td>

@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['order_id', 'amount', 'payment_date', 'payment_type', 'status'])]
 class Payment extends Model
 {
+    // Qué fue el pago para su pedido (lo calcula Order::actualizarEstadoPagos)
+    const ESTADOS = [
+        'adelanto' => 'Adelanto',
+        'cancelacion' => 'Cancelación',
+    ];
+
     protected function casts(): array
     {
         return [

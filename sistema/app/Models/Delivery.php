@@ -21,12 +21,25 @@ class Delivery extends Model
         return $this->belongsTo(Order::class);
     }
 
-    // Método del diagrama: el pedido solo se entrega cuando está pagado por completo.
+    // Motivo por el que todavía no se puede entregar (null si ya se puede)
+    public function impedimento(): ?string
+    {
+        if ($this->order->status !== 'terminado') {
+            return 'El pedido todavía no termina su producción (está ' . mb_strtolower(Order::ESTADOS[$this->order->status] ?? $this->order->status) . ').';
+        }
+
+        $saldo = round((float) $this->order->total - (float) $this->order->payments()->sum('amount'), 2);
+        if ($saldo > 0) {
+            return 'El pedido tiene un saldo pendiente de S/ ' . number_format($saldo, 2) . '.';
+        }
+
+        return null;
+    }
+
+    // Método del diagrama: el pedido solo se entrega cuando ya está terminado y pagado por completo.
     public function confirmarEntrega(): bool
     {
-        $pagado = (float) $this->order->payments()->sum('amount');
-
-        if ($pagado < (float) $this->order->total) {
+        if ($this->impedimento()) {
             return false;
         }
 

@@ -17,16 +17,16 @@
       <h5 class="mb-0 me-2">Pedido Nº {{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</h5>
       @include('gestion.orders.status-badge', ['status' => $order->status])
       <div class="ms-auto d-flex flex-wrap gap-2">
-        @if ($order->status !== 'entregado')
+        @if ($order->status !== 'entregado' && auth()->user()->puede('pedidos'))
           <a href="{{ route('orders.edit', $order) }}" class="btn btn-outline-dark btn-sm"><i class="bi bi-pencil-square me-1"></i> Modificar</a>
         @endif
-        @if ($saldo > 0 && $order->status !== 'entregado')
+        @if ($saldo > 0 && $order->status !== 'entregado' && auth()->user()->puede('pagos'))
           <a href="{{ route('payments.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-cash-coin me-1"></i> Registrar pago</a>
         @endif
-        @if (in_array($order->status, ['pendiente', 'en_produccion']))
+        @if (in_array($order->status, ['pendiente', 'en_produccion']) && auth()->user()->puede('produccion'))
           <a href="{{ route('productions.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-scissors me-1"></i> Enviar a producción</a>
         @endif
-        @if ($order->status === 'entregado' && ! $order->sale)
+        @if ($order->status === 'entregado' && ! $order->sale && auth()->user()->puede('ventas'))
           {{-- Pedido «origina» Venta: comprobante del pedido ya pagado y entregado --}}
           <form action="{{ route('orders.sale', $order) }}" method="POST" class="d-inline"
                 onsubmit="return confirm('¿Generar la venta (comprobante) de este pedido?');">
@@ -34,7 +34,7 @@
             <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-receipt me-1"></i> Generar venta</button>
           </form>
         @endif
-        @if (! $order->delivery)
+        @if (! $order->delivery && auth()->user()->puede('entregas'))
           <a href="{{ route('deliveries.create', ['order_id' => $order->id]) }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-truck me-1"></i> Programar entrega</a>
         @endif
       </div>
@@ -46,8 +46,8 @@
         <span class="fw-semibold">{{ $order->customer->name }}</span>
       </div>
       <div class="col-12 col-md-4 mb-2">
-        <small class="text-muted d-block">DNI</small>
-        <span class="fw-semibold">{{ $order->customer->dni }}</span>
+        <small class="text-muted d-block">Documento</small>
+        <span class="fw-semibold">{{ $order->customer->documento() }}</span>
       </div>
       <div class="col-12 col-md-4 mb-2">
         <small class="text-muted d-block">Fecha del pedido</small>
@@ -104,24 +104,7 @@
       </table>
     </div>
 
-    @if ($order->status !== 'entregado')
-      {{-- Cambiar la etapa del pedido (método del diagrama: actualizarEstado) --}}
-      <form action="{{ route('orders.status', $order) }}" method="POST" class="row g-2 align-items-center mt-2">
-        @csrf
-        @method('PATCH')
-        <div class="col-auto"><label for="status" class="col-form-label small">Etapa del pedido</label></div>
-        <div class="col-auto">
-          <select name="status" id="status" class="form-select form-select-sm">
-            @foreach ($estados as $valor => $texto)
-              @continue($valor === 'entregado')
-              <option value="{{ $valor }}" @selected($order->status === $valor)>{{ $texto }}</option>
-            @endforeach
-          </select>
-        </div>
-        <div class="col-auto"><button type="submit" class="btn btn-sm btn-primary">Actualizar etapa</button></div>
-        <div class="col-12"><small class="text-muted">La etapa cambia sola al iniciar y terminar la producción; el pedido pasa a «Entregado» al confirmar su entrega.</small></div>
-      </form>
-    @endif
+    <p class="small text-muted mb-0"><i class="bi bi-info-circle me-1"></i>La etapa del pedido cambia sola: «En producción» al iniciar su producción, «Terminado» cuando se terminan todos sus trabajos y «Entregado» al confirmar la entrega.</p>
   </div>
 </div>
 
@@ -167,7 +150,8 @@
           <thead>
             <tr>
               <th class="small text-uppercase">Fecha</th>
-              <th class="small text-uppercase">Tipo</th>
+              <th class="small text-uppercase">Forma</th>
+              <th class="small text-uppercase">Pago</th>
               <th class="small text-uppercase text-end">Monto</th>
             </tr>
           </thead>
@@ -176,10 +160,11 @@
               <tr>
                 <td>{{ $payment->payment_date->format('d/m/Y') }}</td>
                 <td>{{ $payment->payment_type }}</td>
+                <td><span class="badge {{ $payment->status === 'cancelacion' ? 'bg-success' : 'bg-warning text-dark' }}">{{ \App\Models\Payment::ESTADOS[$payment->status] ?? $payment->status }}</span></td>
                 <td class="text-end">S/ {{ number_format($payment->amount, 2) }}</td>
               </tr>
             @empty
-              <tr><td colspan="3" class="text-muted small">Todavía no hay pagos.</td></tr>
+              <tr><td colspan="4" class="text-muted small">Todavía no hay pagos.</td></tr>
             @endforelse
           </tbody>
         </table>
@@ -204,7 +189,7 @@
         @endif
         @if ($order->sale)
           <hr>
-          <p class="mb-0 small">Venta generada: <a href="{{ route('sales.show', $order->sale) }}">Nº {{ str_pad($order->sale->id, 6, '0', STR_PAD_LEFT) }}</a></p>
+          <p class="mb-0 small">Venta generada: @can('modulo', 'ventas')<a href="{{ route('sales.show', $order->sale) }}">Nº {{ str_pad($order->sale->id, 6, '0', STR_PAD_LEFT) }}</a>@else Nº {{ str_pad($order->sale->id, 6, '0', STR_PAD_LEFT) }}@endcan</p>
         @endif
       </div>
     </div>

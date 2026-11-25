@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['category_id', 'name', 'garment_type', 'price', 'quantity', 'unit', 'status', 'image'])]
 class Product extends Model
@@ -23,9 +24,16 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function inventories(): HasMany
+    // Solo las prendas se venden y se piden; los insumos (telas, hilos...) son del taller
+    public function scopePrendas($query)
     {
-        return $this->hasMany(Inventory::class);
+        return $query->whereHas('category', fn ($q) => $q->where('type', 'prenda'));
+    }
+
+    // Producto 1 — 0..1 Inventario: cada producto tiene como máximo un registro de inventario
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(Inventory::class);
     }
 
     public function orderDetails(): HasMany
@@ -51,6 +59,6 @@ class Product extends Model
         $this->quantity = round((float) $this->quantity + $cantidad, 2);
         $this->save();
 
-        $this->inventories()->get()->each(fn ($inventario) => $inventario->actualizarInventario($cantidad));
+        $this->inventory?->actualizarInventario($cantidad);
     }
 }

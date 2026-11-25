@@ -18,16 +18,18 @@
       <h3>Pedidos registrados</h3>
       <p>Total de registros encontrados: {{ $orders->count() }}</p>
     </div>
-    <a href="{{ route('orders.create') }}" class="btn btn-primary ms-auto">
-      <i class="bi bi-plus-lg me-1"></i> Nuevo pedido
-    </a>
+    @can('modulo', 'pedidos')
+      <a href="{{ route('orders.create') }}" class="btn btn-primary ms-auto">
+        <i class="bi bi-plus-lg me-1"></i> Nuevo pedido
+      </a>
+    @endcan
   </div>
 
   {{-- Filtros por GET: quedan en la URL (?search=...&status=...) --}}
   <div class="card-body pb-0">
     <form action="{{ route('orders.index') }}" method="GET" class="row g-2 align-items-center">
       <div class="col-12 col-md-6">
-        <input type="text" name="search" class="form-control" placeholder="Buscar por Nº de pedido, DNI o nombre del cliente"
+        <input type="text" name="search" class="form-control" placeholder="Buscar por Nº de pedido, DNI o RUC, o nombre del cliente"
                value="{{ request('search') }}">
       </div>
       <div class="col-12 col-md-3">
@@ -66,7 +68,7 @@
             <tr>
               <td class="text-center">Nº {{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</td>
               <td class="text-center">{{ $order->order_date->format('d/m/Y') }}</td>
-              <td>{{ $order->customer->name }}<br><small class="text-muted">DNI {{ $order->customer->dni }}</small></td>
+              <td>{{ $order->customer->name }}<br><small class="text-muted">{{ $order->customer->documento() }}</small></td>
               <td class="text-end">S/ {{ number_format($order->total, 2) }}</td>
               <td class="text-end">S/ {{ number_format($order->payments_sum_amount ?? 0, 2) }}</td>
               <td class="text-end {{ $saldo > 0 ? 'text-danger fw-semibold' : '' }}">S/ {{ number_format($saldo, 2) }}</td>
@@ -82,6 +84,7 @@
                     <li>
                       <a class="dropdown-item" href="{{ route('orders.show', $order) }}"><i class="bi bi-eye"></i> Ver detalle</a>
                     </li>
+                    @can('modulo', 'pedidos')
                     @if ($order->status !== 'entregado')
                       <li>
                         <a class="dropdown-item" href="{{ route('orders.edit', $order) }}"><i class="bi bi-pencil-square"></i> Modificar</a>
@@ -95,6 +98,7 @@
                         <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash"></i> Eliminar</button>
                       </form>
                     </li>
+                    @endcan
                   </ul>
                 </div>
               </td>

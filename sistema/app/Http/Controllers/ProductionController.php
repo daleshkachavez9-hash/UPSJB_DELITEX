@@ -20,7 +20,7 @@ class ProductionController extends Controller
             ->when($request->search, function ($query, $search) {
                 $numero = (int) ltrim($search, '0');
                 $query->where(function ($q) use ($search, $numero) {
-                    $q->whereHas('order.customer', fn ($c) => $c->where('dni', 'like', "%{$search}%")
+                    $q->whereHas('order.customer', fn ($c) => $c->where('document_number', 'like', "%{$search}%")
                         ->orWhere('name', 'like', "%{$search}%"));
                     if ($numero > 0) {
                         $q->orWhere('order_id', $numero);

@@ -17,7 +17,7 @@
         <div class="col-12">
           <label for="order_label" class="form-label">Pedido</label>
           <div class="input-group has-validation">
-            <input type="text" id="order_label" readonly placeholder="Busque por Nº de pedido, DNI o nombre"
+            <input type="text" id="order_label" readonly placeholder="Busque por Nº de pedido, documento o nombre"
                    class="form-control bg-white @error('order_id') is-invalid @enderror"
                    value="{{ $pedidoElegido ? 'Nº ' . str_pad($pedidoElegido->id, 6, '0', STR_PAD_LEFT) . ' - ' . $pedidoElegido->customer->name : '' }}">
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalPedido">
@@ -57,12 +57,12 @@
 @include('partials.modal-buscar', [
   'id' => 'modalPedido',
   'titulo' => 'Buscar pedido',
-  'placeholder' => 'Escriba el Nº de pedido, el DNI o el nombre del cliente',
-  'columnas' => ['Pedido', 'Cliente', 'DNI', 'Fecha', 'Estado'],
+  'placeholder' => 'Escriba el Nº de pedido, el DNI o RUC, o el nombre del cliente',
+  'columnas' => ['Pedido', 'Cliente', 'Documento', 'Fecha', 'Estado'],
   'filas' => $orders->map(fn ($o) => [
     'id' => $o->id,
-    'texto' => str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' ' . $o->customer->dni . ' ' . $o->customer->name,
-    'celdas' => ['Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT), $o->customer->name, $o->customer->dni, $o->order_date->format('d/m/Y'), \App\Models\Order::ESTADOS[$o->status] ?? $o->status],
+    'texto' => str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' ' . $o->customer->document_number . ' ' . $o->customer->name,
+    'celdas' => ['Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT), $o->customer->name, $o->customer->documento(), $o->order_date->format('d/m/Y'), \App\Models\Order::ESTADOS[$o->status] ?? $o->status],
     'datos' => [
       'label' => 'Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' - ' . $o->customer->name,
       'info' => (\App\Models\Order::ESTADOS[$o->status] ?? $o->status) . ' · ' . ($o->description ?? 'Sin descripción'),

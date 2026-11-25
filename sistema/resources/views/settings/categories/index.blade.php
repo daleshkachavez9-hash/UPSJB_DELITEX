@@ -30,6 +30,7 @@
           <tr>
             <th class="text-center">Nº</th>
             <th>Nombre</th>
+            <th>Tipo</th>
             <th>Descripción</th>
             <th class="text-center">Productos</th>
             <th class="text-end">Acciones</th>
@@ -40,6 +41,7 @@
             <tr>
               <td class="text-center">{{ $loop->iteration }}</td>
               <td>{{ $category->name }}</td>
+              <td><span class="badge {{ $category->type === 'prenda' ? 'bg-primary' : 'bg-secondary' }}">{{ $category->type === 'prenda' ? 'Prenda' : 'Insumo' }}</span></td>
               <td>{{ $category->description ?? '—' }}</td>
               <td class="text-center">{{ $category->products_count }}</td>
               <td class="text-end">
@@ -69,7 +71,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="5" class="text-center text-muted py-4">No hay categorías registradas.</td>
+              <td colspan="6" class="text-center text-muted py-4">No hay categorías registradas.</td>
             </tr>
           @endforelse
         </tbody>

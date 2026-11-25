@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class SaleController extends Controller
@@ -24,7 +26,7 @@ class SaleController extends Controller
     public function create()
     {
         $customers = Customer::orderBy('name')->get();
-        $products = Product::with('category')->where('status', 'activo')->where('quantity', '>', 0)->orderBy('name')->get();
+        $products = Product::with('category')->prendas()->where('status', 'activo')->where('quantity', '>', 0)->orderBy('name')->get();
 
         return view('gestion.sales.create', compact('customers', 'products'));
     }
@@ -35,11 +37,13 @@ class SaleController extends Controller
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|distinct|exists:products,id',
+            // Solo prendas: DELITEX no vende sus insumos (telas, hilos, accesorios)
+            'items.*.product_id' => ['required', 'distinct', Rule::exists('products', 'id')->where(fn ($q) => $q->whereIn('category_id', Category::where('type', 'prenda')->select('id')))],
             'items.*.quantity' => 'required|integer|min:1',
         ], [
             'items.required' => 'Debe agregar al menos un producto.',
             'items.*.product_id.distinct' => 'No repita el mismo producto, aumente la cantidad.',
+            'items.*.product_id.exists' => 'Solo se venden prendas; los insumos son de uso del taller.',
         ]);
 
         // Transacción: si algo falla, no se guarda nada
