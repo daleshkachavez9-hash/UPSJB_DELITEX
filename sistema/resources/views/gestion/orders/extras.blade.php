@@ -7,7 +7,7 @@
   'id' => 'modalCliente',
   'titulo' => 'Buscar cliente',
   'placeholder' => 'Escriba el DNI o RUC, o el nombre del cliente',
-  'columnas' => ['DNI', 'Nombre', 'Teléfono'],
+  'columnas' => ['Documento', 'Nombre', 'Teléfono'],
   'filas' => $customers->map(fn ($c) => [
     'id' => $c->id,
     'texto' => $c->document_number . ' ' . $c->name,
@@ -32,14 +32,15 @@
 @push('scripts')
 <script src="{{ asset('js/buscador.js') }}"></script>
 <script>
-  const tbody = document.getElementById('items');
+  const tabla = document.getElementById('items');
+  const pie = tabla.querySelector('tfoot');
   const template = document.getElementById('item-template').innerHTML;
   let index = {{ count(old('items', isset($order) ? $order->details : [])) }};
 
   // Recalcula subtotales y total
   function recalculate() {
     let total = 0;
-    tbody.querySelectorAll('tr').forEach(row => {
+    tabla.querySelectorAll('tbody.item').forEach(row => {
       const price = parseFloat(row.querySelector('.unit-price').value || 0);
       const quantity = parseInt(row.querySelector('.quantity').value || 0);
       const subtotal = price * quantity;
@@ -47,13 +48,13 @@
       total += subtotal;
     });
     document.getElementById('total').textContent = 'S/ ' + total.toFixed(2);
-    document.getElementById('sin-items').classList.toggle('d-none', tbody.children.length > 0);
+    document.getElementById('sin-items').classList.toggle('d-none', tabla.querySelectorAll('tbody.item').length > 0);
   }
 
   // Agrega una fila vacía y la devuelve
   function nuevaFila() {
-    tbody.insertAdjacentHTML('beforeend', template.replaceAll('__INDEX__', index++));
-    return tbody.lastElementChild;
+    pie.insertAdjacentHTML('beforebegin', template.replaceAll('__INDEX__', index++));
+    return pie.previousElementSibling;
   }
 
   // Cliente elegido en la ventana de búsqueda
@@ -67,24 +68,38 @@
     const fila = nuevaFila();
     fila.querySelector('.product-id').value = e.detail.id;
     fila.querySelector('.product-name').textContent = e.detail.name;
+    fila.querySelector('.product-name').classList.remove('d-none');
+    // Del catálogo: el tipo de prenda sale del producto
+    const tipo = fila.querySelector('.garment-type');
+    tipo.classList.add('d-none');
+    tipo.disabled = true;
     fila.querySelector('.unit-price').value = e.detail.price;
     recalculate();
   });
 
   // Prenda personalizada: sin producto del catálogo
   document.getElementById('add-custom').addEventListener('click', () => {
-    nuevaFila().querySelector('.unit-price').focus();
+    nuevaFila().querySelector('.garment-type').focus();
     recalculate();
   });
 
-  tbody.addEventListener('click', e => {
+  tabla.addEventListener('click', e => {
     if (e.target.closest('.remove-item')) {
-      e.target.closest('tr').remove();
+      e.target.closest('tbody.item').remove();
       recalculate();
     }
   });
 
-  tbody.addEventListener('input', recalculate);
+  // Sin estampado no hay detalle que escribir
+  tabla.addEventListener('change', e => {
+    if (e.target.classList.contains('print-type')) {
+      const detalle = e.target.closest('tbody.item').querySelector('.print-detail');
+      detalle.disabled = e.target.value === 'Sin estampado';
+      if (detalle.disabled) detalle.value = '';
+    }
+  });
+
+  tabla.addEventListener('input', recalculate);
   recalculate();
 </script>
 @endpush

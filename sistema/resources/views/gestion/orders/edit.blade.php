@@ -11,7 +11,7 @@
 @section('content')
 <div class="card">
   <div class="card-body">
-    <form action="{{ route('orders.update', $order) }}" method="POST">
+    <form action="{{ route('orders.update', $order) }}" method="POST" enctype="multipart/form-data">
       @csrf
       @method('PUT')
       @include('gestion.orders.form')

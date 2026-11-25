@@ -17,6 +17,7 @@
       <h5 class="mb-0 me-2">Pedido Nº {{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</h5>
       @include('gestion.orders.status-badge', ['status' => $order->status])
       <div class="ms-auto d-flex flex-wrap gap-2">
+        <a href="{{ route('orders.ficha', $order) }}" class="btn btn-lavanda btn-sm" target="_blank"><i class="bi bi-file-earmark-text me-1"></i> Ficha de producción</a>
         @if ($order->status !== 'entregado' && auth()->user()->puede('pedidos'))
           <a href="{{ route('orders.edit', $order) }}" class="btn btn-outline-dark btn-sm"><i class="bi bi-pencil-square me-1"></i> Modificar</a>
         @endif
@@ -54,9 +55,18 @@
         <span class="fw-semibold">{{ $order->order_date->format('d/m/Y') }}</span>
       </div>
       @if ($order->description)
-        <div class="col-12 mb-2">
+        <div class="col-12 {{ $order->reference_image ? 'col-md-8' : '' }} mb-2">
           <small class="text-muted d-block">Descripción</small>
           <span>{{ $order->description }}</span>
+        </div>
+      @endif
+      @if ($order->reference_image)
+        <div class="col-12 col-md-4 mb-2">
+          <small class="text-muted d-block">Imagen de referencia</small>
+          <a href="{{ asset('storage/' . $order->reference_image) }}" target="_blank">
+            <img src="{{ asset('storage/' . $order->reference_image) }}" alt="Imagen de referencia del pedido"
+                 class="rounded border mt-1" style="max-height: 120px; max-width: 100%; object-fit: contain;">
+          </a>
         </div>
       @endif
     </div>
@@ -78,7 +88,12 @@
           @foreach ($order->details as $detail)
             <tr>
               <td class="text-center">{{ $loop->iteration }}</td>
-              <td>{{ $detail->product->name ?? 'Prenda personalizada' }}</td>
+              <td>
+                {{ $detail->nombrePrenda() }}
+                <small class="text-muted d-block">
+                  {{ collect([$detail->fabric, $detail->print_type === 'Sin estampado' ? null : $detail->print_type . ($detail->print_detail ? ': ' . $detail->print_detail : ''), $detail->notes])->filter()->implode(' · ') ?: 'Sin estampado' }}
+                </small>
+              </td>
               <td class="text-center">{{ $detail->size ?? '—' }}</td>
               <td class="text-center">{{ $detail->color ?? '—' }}</td>
               <td class="text-center">{{ $detail->quantity }}</td>

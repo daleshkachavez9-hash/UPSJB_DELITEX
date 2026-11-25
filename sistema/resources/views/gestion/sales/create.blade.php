@@ -115,7 +115,7 @@
   'id' => 'modalCliente',
   'titulo' => 'Buscar cliente',
   'placeholder' => 'Escriba el DNI o RUC, o el nombre del cliente',
-  'columnas' => ['DNI', 'Nombre', 'Teléfono'],
+  'columnas' => ['Documento', 'Nombre', 'Teléfono'],
   'filas' => $customers->map(fn ($c) => [
     'id' => $c->id,
     'texto' => $c->document_number . ' ' . $c->name,

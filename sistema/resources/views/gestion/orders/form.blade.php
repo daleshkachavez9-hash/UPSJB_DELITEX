@@ -6,8 +6,13 @@
   $filas = old('items', isset($order)
       ? $order->details->map(fn ($d) => [
           'product_id' => $d->product_id,
+          'garment_type' => $d->garment_type,
           'size' => $d->size,
           'color' => $d->color,
+          'fabric' => $d->fabric,
+          'print_type' => $d->print_type,
+          'print_detail' => $d->print_detail,
+          'notes' => $d->notes,
           'quantity' => $d->quantity,
           'unit_price' => $d->unit_price,
         ])->all()
@@ -50,6 +55,26 @@
       <div class="invalid-feedback">{{ $message }}</div>
     @enderror
   </div>
+
+  {{-- Imagen de referencia: logo, escudo o diseño que envía el cliente (aparece en la ficha de producción) --}}
+  <div class="col-md-6">
+    <label for="reference_image" class="form-label">Imagen de referencia <small class="text-muted">(opcional, JPG, PNG o WEBP de hasta 2 MB)</small></label>
+    <input type="file" name="reference_image" id="reference_image" accept="image/jpeg,image/png,image/webp"
+           class="form-control @error('reference_image') is-invalid @enderror">
+    @error('reference_image')
+      <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+  </div>
+  @if (isset($order) && $order->reference_image)
+    <div class="col-md-6 d-flex align-items-center gap-3">
+      <img src="{{ asset('storage/' . $order->reference_image) }}" alt="Imagen de referencia del pedido"
+           class="rounded border" style="max-height: 80px; max-width: 120px; object-fit: contain;">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="remove_image" value="1" id="remove_image">
+        <label class="form-check-label small" for="remove_image">Quitar la imagen actual</label>
+      </div>
+    </div>
+  @endif
 </div>
 
 <h6 class="text-uppercase small text-muted mt-4 mb-2">Prendas del pedido</h6>
@@ -65,10 +90,10 @@
 @endif
 
 <div class="table-responsive">
-  <table class="table table-sm align-middle">
+  <table class="table table-sm align-middle table-borderless" id="items">
     <thead>
       <tr>
-        <th class="small text-uppercase">Prenda</th>
+        <th class="small text-uppercase" style="min-width: 190px">Prenda</th>
         <th class="small text-uppercase" style="width: 90px">Talla</th>
         <th class="small text-uppercase" style="width: 120px">Color</th>
         <th class="small text-uppercase text-center" style="width: 90px">Cantidad</th>
@@ -77,7 +102,6 @@
         <th style="width: 50px"></th>
       </tr>
     </thead>
-    <tbody id="items">
       @foreach ($filas as $i => $item)
         @include('gestion.orders.item-row', [
           'index' => $i,
@@ -87,7 +111,6 @@
               ?? (isset($order) ? $order->details->firstWhere('product_id', $item['product_id'] ?? 0)?->product : null),
         ])
       @endforeach
-    </tbody>
     <tfoot>
       <tr>
         <td colspan="5" class="text-end fw-semibold">Total del pedido</td>
