@@ -11,7 +11,6 @@
 @php
   // Si la validación falla, se vuelve a mostrar lo que se había elegido
   $clienteElegido = $customers->firstWhere('id', old('customer_id'));
-  $pedidoElegido = $orders->firstWhere('id', old('order_id'));
 @endphp
 
 {{-- Ventas: no hay edit; se registra, se consulta y, si hace falta, se anula --}}
@@ -40,39 +39,13 @@
           <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}">
         </div>
 
-        <div class="col-md-3">
-          <label for="user_id" class="form-label">Vendedor</label>
-          <select name="user_id" id="user_id" class="form-select @error('user_id') is-invalid @enderror">
-            <option value="">-- Seleccione --</option>
-            @foreach ($users as $user)
-              <option value="{{ $user->id }}" @selected(old('user_id') == $user->id)>{{ $user->name }}</option>
-            @endforeach
-          </select>
-          @error('user_id')
-            <div class="invalid-feedback">{{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="col-md-4">
-          <label for="order_label" class="form-label">Pedido <small class="text-muted">(opcional)</small></label>
-          {{-- Un pedido origina como máximo una venta --}}
-          <div class="input-group has-validation">
-            <input type="text" id="order_label" readonly
-                   class="form-control bg-white @error('order_id') is-invalid @enderror"
-                   value="{{ $pedidoElegido ? 'Nº ' . str_pad($pedidoElegido->id, 6, '0', STR_PAD_LEFT) . ' - ' . $pedidoElegido->customer->name : 'Sin pedido' }}">
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalPedido" title="Buscar pedido">
-              <i class="bi bi-search"></i>
-            </button>
-            <button type="button" class="btn btn-outline-secondary" id="quitar-pedido" title="Venta sin pedido">
-              <i class="bi bi-x-lg"></i>
-            </button>
-            @error('order_id')
-              <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-          <input type="hidden" name="order_id" id="order_id" value="{{ old('order_id') }}">
+        <div class="col-md-7">
+          {{-- El vendedor es el usuario que inició sesión: no se elige --}}
+          <label class="form-label">Vendedor</label>
+          <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
         </div>
       </div>
+      <p class="small text-muted mt-2 mb-0"><i class="bi bi-info-circle me-1"></i>Esta es una venta directa de productos del catálogo. El comprobante de un pedido personalizado se genera desde el pedido, cuando ya fue entregado.</p>
 
       {{-- Detalle de productos --}}
       <h6 class="text-uppercase small text-muted mt-4 mb-2">Productos</h6>
@@ -152,23 +125,6 @@
 ])
 
 @include('partials.modal-buscar', [
-  'id' => 'modalPedido',
-  'titulo' => 'Buscar pedido',
-  'placeholder' => 'Escriba el número del pedido, el DNI o el nombre del cliente',
-  'columnas' => ['Pedido', 'Cliente', 'DNI', 'Fecha'],
-  'filas' => $orders->map(fn ($o) => [
-    'id' => $o->id,
-    'texto' => str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' ' . $o->customer->dni . ' ' . $o->customer->name,
-    'celdas' => ['Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT), $o->customer->name, $o->customer->dni, $o->order_date->format('d/m/Y')],
-    'datos' => [
-      'label' => 'Nº ' . str_pad($o->id, 6, '0', STR_PAD_LEFT) . ' - ' . $o->customer->name,
-      'customer-id' => $o->customer_id,
-      'customer-label' => $o->customer->name . ' - DNI ' . $o->customer->dni,
-    ],
-  ])->all(),
-])
-
-@include('partials.modal-buscar', [
   'id' => 'modalProducto',
   'titulo' => 'Agregar producto',
   'placeholder' => 'Escriba el nombre o la categoría del producto',
@@ -208,19 +164,6 @@
   document.getElementById('modalCliente').addEventListener('buscador:elegido', e => {
     document.getElementById('customer_id').value = e.detail.id;
     document.getElementById('customer_label').value = e.detail.label;
-  });
-
-  // Pedido elegido: también completa el cliente del pedido
-  document.getElementById('modalPedido').addEventListener('buscador:elegido', e => {
-    document.getElementById('order_id').value = e.detail.id;
-    document.getElementById('order_label').value = e.detail.label;
-    document.getElementById('customer_id').value = e.detail.customerId;
-    document.getElementById('customer_label').value = e.detail.customerLabel;
-  });
-
-  document.getElementById('quitar-pedido').addEventListener('click', () => {
-    document.getElementById('order_id').value = '';
-    document.getElementById('order_label').value = 'Sin pedido';
   });
 
   // Producto elegido: si ya está en la lista se aumenta su cantidad; si no, se agrega una fila
